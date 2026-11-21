@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0a1929" />
+<title>Ayet Studio — 4K MP4</title>
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" type="image/svg+xml" href="icon.svg" />
+<link rel="apple-touch-icon" href="icon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!-- ═════════════════════════════════════════════════════════════════
+     CSS — İÇİNDEKİLER
+     ─────────────────────────────────────────────────────────────────
+     BÖLÜM C1 → Değişkenler ve Reset        (satır ~50)
+     BÖLÜM C2 → Layout ve Responsive        (satır ~110)
+     BÖLÜM C3 → Bileşenler (form/buton)     (satır ~220)
+     ═════════════════════════════════════════════════════════════════ -->
+<style>
+
+/* ═════════════════════════════════════════════════════════════════
+   BÖLÜM C1: DEĞİŞKENLER VE RESET
+   Renk / font değiştirmek için buraya bakın
+   ═════════════════════════════════════════════════════════════════ */
+:root {
+  --bg: #0a1929;
+  --bg-soft: #0f2238;
+  --krem: #f5e6c8;
+  --altin: #c9a227;
+  --altin-soft: #e0c468;
+  --metin: #e8dcc0;
+  --metin-soluk: #a89a7a;
+  --cizgi: rgba(201, 162, 39, 0.35);
+  --radius: 12px;
+  --font-arapca: "Amiri", serif;
+  --font-turkce: "Cormorant Garamond", "Inter", serif;
+  --font-ui: "Inter", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--metin);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  overscroll-behavior: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid var(--cizgi);
+  background: var(--bg-soft);
+  color: var(--metin);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  font-size: 14px;
+  transition: background .2s, border-color .2s;
+}
+button:hover { background: #16304d; border-color: var(--altin); }
+button.primary {
+  background: linear-gradient(135deg, var(--altin), var(--altin-soft));
+  color: #0a1929; font-weight: 700; border: none;
+}
+button:disabled { opacity: .5; cursor: not-allowed; }
+
+input, select {
+  font-family: inherit;
+  background: var(--bg-soft);
+  border: 1px solid var(--cizgi);
+  color: var(--metin);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 14px;
+  width: 100%;
+}
+
+h1, h2 { font-family: var(--font-turkce); letter-spacing: .5px; }
+h1 { font-size: 20px; }
+h2 { font-size: 16px; color: var(--altin-soft); margin-bottom: 10px; }
+
+.badge {
+  font-size: 11px;
+  background: var(--altin);
+  color: var(--bg);
+  padding: 2px 8px;
+  border-radius: 20px;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+
+.hidden { display: none !important; }
+
+
+/* ═════════════════════════════════════════════════════════════════
+   BÖLÜM C2: LAYOUT VE RESPONSIVE
+   Masaüstü grid, mobil sekme, yatay mobil
+   ═════════════════════════════════════════════════════════════════ */
+#topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: var(--bg-soft);
+  border-bottom: 1px solid var(--cizgi);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+#topbar .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+#app {
+  display: grid;
+  grid-template-columns: 280px 1fr 300px;
+  gap: 16px;
+  padding: 16px;
+  height: calc(100vh - 64px);
+  overflow: hidden;
+}
+#panel-takip, #panel-ayarlar {
+  overflow-y: auto;
+  background: var(--bg-soft);
+  border: 1px solid var(--cizgi);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+#panel-onizleme {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.preview-tabs { display: flex; gap: 8px; }
+.preview-tabs button { flex: 1; }
+.preview-tabs button.active {
+  background: var(--altin);
+  color: var(--bg);
+  border-color: var(--altin);
+}
+
+.canvas-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  border-radius: var(--radius);
+  overflow: hidden;
+  min-height: 0;
+}
+#canvas-onizleme {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+#tabbar { display: none; }
+
+@media (max-width: 900px) {
+  #app {
+    grid-template-columns: 1fr;
+    padding: 12px;
+    padding-bottom: 80px;
+    height: calc(100vh - 64px);
+  }
+  #app > aside, #app > section { display: none; }
+  #app > .tab-aktif { display: flex; flex-direction: column; }
+  #panel-ayarlar.tab-aktif, #panel-takip.tab-aktif { display: block; }
+
+  #tabbar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--bg-soft);
+    border-top: 1px solid var(--cizgi);
+    padding: 6px;
+    gap: 4px;
+    z-index: 20;
+  }
+  #tabbar button {
+    background: transparent;
+    border: none;
+    padding: 10px 6px;
+    font-size: 12px;
+    color: var(--metin-soluk);
+  }
+  #tabbar button.active { color: var(--altin); font-weight: 700; }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  #topbar { padding: 6px 12px; }
+  #app { height: calc(100vh - 48px); padding: 8px; gap: 8px; grid-template-columns: 240px 1fr 260px; }
+  #tabbar { display: none !important; }
+  #app > aside, #app > section { display: flex !important; }
+}
+
+
+/* ═════════════════════════════════════════════════════════════════
+   BÖLÜM C3: BİLEŞENLER
+   Form satırları, bilgi kutuları, kopyalama grid, yükleme overlay
+   ═════════════════════════════════════════════════════════════════ */
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.form-row label { font-size: 12px; color: var(--metin-soluk); }
+
+.info-box {
+  padding: 10px 12px;
+  background: var(--bg);
+  border: 1px solid var(--cizgi);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+.info-box.highlight {
+  border-color: var(--altin);
+  background: linear-gradient(135deg, rgba(201,162,39,.12), transparent);
+}
+.info-box b { color: var(--altin-soft); }
+
+#takip-siradaki button { width: 100%; font-size: 12px; padding: 8px; }
+
+.copy-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.copy-grid button { font-size: 12px; padding: 8px; }
+.copy-grid button.wide { grid-column: 1 / -1; }
+
+#overlay {
+  position: fixed; inset: 0;
+  background: rgba(10,25,41,.92);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 16px; z-index: 100;
+  color: var(--krem);
+}
+.spinner {
+  width: 48px; height: 48px;
+  border: 4px solid rgba(201,162,39,.25);
+  border-top-color: var(--altin);
+  border-radius: 50%;
+  animation: don .8s linear infinite;
+}
+@keyframes don { to { transform: rotate(360deg); } }
+
+#overlay-progress {
+  width: 260px; height: 6px;
+  background: rgba(201,162,39,.2);
+  border-radius: 3px; overflow: hidden;
+}
+#overlay-progress::after {
+  content: ''; display: block; height: 100%;
+  width: var(--ilerleme, 0%);
+  background: var(--altin);
+  transition: width .2s;
+}
+
+</style>
+</head>
+<body>
+
+<!-- ═════════════════════════════════════════════════════════════════
+     BÖLÜM H1: HTML YAPISI
+     Üst bar, ana panel, mobil sekme çubuğu, yükleme overlay
+     ═════════════════════════════════════════════════════════════════ -->
+<header id="topbar">
+  <h1>🕌 Ayet Studio <span class="badge">4K MP4</span></h1>
+  <div class="actions">
+    <button id="btn-json-yukle">📂 JSON Yükle</button>
+    <button id="btn-json-kaydet">💾 JSON Kaydet</button>
+    <button id="btn-video-uret" class="primary">🎬 Video Üret</button>
+  </div>
+</header>
+
+<main id="app">
+  <aside id="panel-takip" class="tab-aktif">
+    <h2>📚 Ayet Takibi</h2>
+    <div id="takip-son" class="info-box"></div>
+    <div id="takip-siradaki" class="info-box highlight"></div>
+    <div class="form-row">
+      <label>Sure</label>
+      <select id="sel-sure"></select>
+    </div>
+    <div class="form-row">
+      <label>Ayet</label>
+      <select id="sel-ayet"></select>
+    </div>
+    <button id="btn-isaretle">✓ İşlendi Olarak İşaretle</button>
+  </aside>
+
+  <section id="panel-onizleme">
+    <div class="preview-tabs">
+      <button data-orient="dikey" class="active">9:16 Dikey</button>
+      <button data-orient="yatay">16:9 Yatay</button>
+    </div>
+    <div class="canvas-wrap">
+      <canvas id="canvas-onizleme"></canvas>
+    </div>
+  </section>
+
+  <aside id="panel-ayarlar">
+    <h2>🎵 Müzik</h2>
+    <div class="form-row">
+      <label><input type="checkbox" id="chk-muzik" /> Müzik ekle</label>
+    </div>
+    <div class="form-row">
+      <input type="file" id="inp-muzik" accept="audio/*" />
+    </div>
+    <div class="form-row">
+      <label>Ses seviyesi</label>
+      <input type="range" id="rng-ses" min="0" max="1" step="0.05" value="0.3" />
+    </div>
+
+    <h2>⚙️ Kodlama</h2>
+    <div class="form-row">
+      <label>Bit hızı (Mbps)</label>
+      <input type="number" id="inp-bitrate" value="40" min="10" max="80" />
+    </div>
+    <div class="form-row">
+      <label>Codec</label>
+      <select id="sel-codec">
+        <option value="avc1.640033">H.264 (uyumlu)</option>
+        <option value="hvc1.1.6.L150.B0">H.265 (küçük dosya)</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Süre (saniye)</label>
+      <input type="number" id="inp-sure" value="35" min="10" max="120" />
+    </div>
+
+    <h2>📋 Meta Kopyala</h2>
+    <div class="copy-grid">
+      <button data-copy="baslik">Başlık</button>
+      <button data-copy="aciklama">Açıklama</button>
+      <button data-copy="hashtag">Hashtag</button>
+      <button data-copy="etiket">Etiketler</button>
+      <button data-copy="sabitYorum" class="wide">Sabit Yorum</button>
+    </div>
+  </aside>
+</main>
+
+<nav id="tabbar">
+  <button data-tab="panel-takip" class="active">📚 Ayetler</button>
+  <button data-tab="panel-onizleme">🎬 Önizleme</button>
+  <button data-tab="panel-ayarlar">⚙️ Ayarlar</button>
+</nav>
+
+<div id="overlay" class="hidden">
+  <div class="spinner"></div>
+  <p id="overlay-mesaj">Kareler kodlanıyor…</p>
+  <div id="overlay-progress"></div>
+</div>
+
+
+<!-- ═════════════════════════════════════════════════════════════════
+     BÖLÜM J: JAVASCRIPT — İÇİNDEKİLER
+     ─────────────────────────────────────────────────────────────────
+     BÖLÜM J1  → State (merkezi durum + localStorage)
+     BÖLÜM J2  → 114 Sure Listesi
+     BÖLÜM J3  → Ayet Takip Mantığı
+     BÖLÜM J4  → JSON Yükle / Kaydet
+     BÖLÜM J5  → Meta Kopyalama
+     BÖLÜM J6  → Süslemeler (çerçeve, köşe, desen)
+     BÖLÜM J7  → Video Çizimi (ölçek tablosu + animasyon)
+     BÖLÜM J8  → 4K MP4 Kodlayıcı (WebCodecs)
+     BÖLÜM J9  → UI Bağlayıcı (DOM olayları)
+     BÖLÜM J10 → Başlatıcı (init)
+     ═════════════════════════════════════════════════════════════════ -->
+<script type="module">
+
+/* ═════════════════════════════════════════════════════════════════
+   BÖLÜM J1: STATE
+   Tüm uygulama durumu burada. Kalıcı veri: localStorage.
+   ═════════════════════════════════════════════════════════════════ */
+const STORAGE_KEY = 'ayetStudio';
+const TAKIP_KEY = 'ayetStudioTakip';
+
+const state = {
+  json: null,
+  aktifVideo: null,
+  aktifOrient: 'dikey',
+  muzik: null,
+  takip: { sonIslenen: null, islenenler: [] },
+};
+
+function takipYukle() {
+  try {
+    const raw = localStorage.getItem(TAKIP_KEY);
+    if (raw) state.takip = JSON.parse(raw);
+  } catch {}
+  return state.takip;
+}
+
+function takipKaydet() {
+  try { localStorage.setItem(TAKIP_KEY, JSON.stringify(state.takip)); } catch {}
+}
+
+function ayetIsaretle(sureNo, ayetNo) {
+  const anahtar = `${sureNo}-${ayetNo}`;
+  if (!state.takip.islenenler.includes(anahtar)) {
+    state.takip.islenenler.push(anahtar);
+  }
+  state.takip.sonIslenen = anahtar;
+  takipKaydet();
+}
+
+function jsonKaydet(obj) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(obj)); } catch {}
+}
+
+
+/* ═════════════════════════════════════════════════════════════════
+   BÖLÜM J2: 114 SURE LİSTESİ
+   Yeni sure güncellemesi olmaz ama iniş yeri vs. düzeltmek için buraya
+   ═════════════════════════════════════════════════════════════════ */
+const SURE_LIST = [
+  { no: 1,   ad: 'Fâtiha',        ayet: 7,   yer: 'Mekke' },
+  { no: 2,   ad: 'Bakara',        ayet: 286, yer: 'Medine' },
+  { no: 3,   ad: 'Âl-i İmrân',    ayet: 200, yer: 'Medine' },
+  { no: 4,   ad: 'Nisâ',          ayet: 176, yer: 'Medine' },
+  { no: 5,   ad: 'Mâide',         ayet: 120, yer: 'Medine' },
+  { no: 6,   ad: 'En\'âm',        ayet: 165, yer: 'Mekke' },
+  { no: 7,   ad: 'A\'râf',        ayet: 206, yer: 'Mekke' },
+  { no: 8,   ad: 'Enfâl',         ayet: 75,  yer: 'Medine' },
+  { no: 9,   ad: 'Tevbe',         ayet: 129, yer: 'Medine' },
+  { no: 10,  ad: 'Yûnus',         ayet: 109, yer: 'Mekke' },
+  { no: 11,  ad: 'Hûd',           ayet: 123, yer: 'Mekke' },
+  { no: 12,  ad: 'Yûsuf',         ayet: 111, yer: 'Mekke' },
+  { no: 13,  ad: 'Ra\'d',         ayet: 43,  yer: 'Medine' },
+  { no: 14,  ad: 'İbrâhîm',       ayet: 52,  yer: 'Mekke' },
+  { no: 15,  ad: 'Hicr',          ayet: 99,  yer: 'Mekke' },
+  { no: 16,  ad: 'Nahl',          ayet: 128, yer: 'Mekke' },
+  { no: 17,  ad: 'İsrâ',          ayet: 111, yer: 'Mekke' },
+  { no: 18,  ad: 'Kehf',          ayet: 110, yer: 'Mekke' },
+  { no: 19,  ad: 'Meryem',        ayet: 98,  yer: 'Mekke' },
+  { no: 20,  ad: 'Tâhâ',          ayet: 135, yer: 'Mekke' },
+  { no: 21,  ad: 'Enbiyâ',        ayet: 112, yer: 'Mekke' },
+  { no: 22,  ad: 'Hac',           ayet: 78,  yer: 'Medine' },
+  { no: 23,  ad: 'Mü\'minûn',     ayet: 118, yer: 'Mekke' },
+  { no: 24,  ad: 'Nûr',           ayet: 64,  yer: 'Medine' },
+  { no: 25,  ad: 'Furkân',        ayet: 77,  yer: 'Mekke' },
+  { no: 26,  ad: 'Şuarâ',         ayet: 227, yer: 'Mekke' },
+  { no: 27,  ad: 'Neml',          ayet: 93,  yer: 'Mekke' },
+  { no: 28,  ad: 'Kasas',         ayet: 88,  yer: 'Mekke' },
+  { no: 29,  ad: 'Ankebût',       ayet: 69,  yer: 'Mekke' },
+  { no: 30,  ad: 'Rûm',           ayet: 60,  yer: 'Mekke' },
+  { no: 31,  ad: 'Lokmân',        ayet: 34,  yer: 'Mekke' },
+  { no: 32,  ad: 'Secde',         ayet: 30,  yer: 'Mekke' },
+  { no: 33,  ad: 'Ahzâb',         ayet: 73,  yer: 'Medine' },
+  { no: 34,  ad: 'Sebe\'',        ayet: 54,  yer: 'Mekke' },
+  { no: 35,  ad: 'Fâtır',         ayet: 45,  yer: 'Mekke' },
+  { no: 36,  ad: 'Yâsîn',         ayet: 83,  yer: 'Mekke' },
+  { no: 37,  ad: 'Sâffât',        ayet: 182, yer: 'Mekke' },
+  { no: 38,  ad: 'Sâd',           ayet: 88,  yer: 'Mekke' },
+  { no: 39,  ad: 'Zümer',         ayet: 75,  yer: 'Mekke' },
+  { no: 40,  ad: 'Mü\'min',       ayet: 85,  yer: 'Mekke' },
+  { no: 41,  ad: 'Fussilet',      ayet: 54,  yer: 'Mekke' },
+  { no: 42,  ad: 'Şûrâ',          ayet: 53,  yer: 'Mekke' },
+  { no: 43,  ad: 'Zuhruf',        ayet: 89,  yer: 'Mekke' },
+  { no: 44,  ad: 'Duhân',         ayet: 59,  yer: 'Mekke' },
+  { no: 45,  ad: 'Câsiye',        ayet: 37,  yer: 'Mekke' },
+  { no: 46,  ad: 'Ahkâf',         ayet: 35,  yer: 'Mekke' },
+  { no: 47,  ad: 'Muhammed',      ayet: 38,  yer: 'Medine' },
+  { no: 48,  ad: 'Fetih',         ayet: 29,  yer: 'Medine' },
+  { no: 49,  ad: 'Hucurât',       ayet: 18,  yer: 'Medine' },
+  { no: 50,  ad: 'Kâf',           ayet: 45,  yer: 'Mekke' },
+  { no: 51,  ad: 'Zâriyât',       ayet: 60,  yer: 'Mekke' },
+  { no: 52,  ad: 'Tûr',           ayet: 49,  yer: 'Mekke' },
+  { no: 53,  ad: 'Necm',          ayet: 62,  yer: 'Mekke' },
+  { no: 54,  ad: 'Kamer',         ayet: 55,  yer: 'Mekke' },
+  { no: 55,  ad: 'Rahmân',        ayet: 78,  yer: 'Medine' },
+  { no: 56,  ad: 'Vâkıa',         ayet: 96,  yer: 'Mekke' },
+  { no: 57,  ad: 'Hadîd',         ayet: 29,  yer: 'Medine' },
+  { no: 58,  ad: 'Mücâdele',      ayet: 22,  yer: 'Medine' },
+  { no: 59,  ad: 'Haşr',          ayet: 24,  yer: 'Medine' },
+  { no: 60,  ad: 'Mümtehine',     ayet: 13,  yer: 'Medine' },
+  { no: 61,  ad: 'Saff',          ayet: 14,  yer: 'Medine' },
+  { no: 62,  ad: 'Cum\'a',        ayet: 11,  yer: 'Medine' },
+  { no: 63,  ad: 'Münâfikûn',     ayet: 11,  yer: 'Medine' },
+  { no: 64,  ad: 'Teğâbün',       ayet: 18,  yer: 'Medine' },
+  { no: 65,  ad: 'Talâk',         ayet: 12,  yer: 'Medine' },
+  { no: 66,  ad: 'Tahrîm',        ayet: 12,  yer: 'Medine' },
+  { no: 67,  ad: 'Mülk',          ayet: 30,  yer: 'Mekke' },
+  { no: 68,  ad: 'Kalem',         ayet: 52,  yer: 'Mekke' },
+  { no: 69,  ad: 'Hâkka',         ayet: 52,  yer: 'Mekke' },
+  { no: 70,  ad: 'Meâric',        ayet: 44,  yer: 'Mekke' },
+  { no: 71,  ad: 'Nûh',           ayet: 28,  yer: 'Mekke' },
+  { no: 72,  ad: 'Cin',           ayet: 28,  yer: 'Mekke' },
+  { no: 73,  ad: 'Müzzemmil',     ayet: 20,  yer: 'Mekke' },
+  { no: 74,  ad: 'Müddessir',     ayet: 56,  yer: 'Mekke' },
+  { no: 75,  ad: 'Kıyâme',        ayet: 40,  yer: 'Mekke' },
+  { no: 76,  ad: 'İnsân',         ayet: 31,  yer: 'Medine' },
+  { no: 77,  ad: 'Mürselât',      ayet: 50,  yer: 'Mekke' },
+  { no: 78,  ad: 'Nebe\'',        ayet: 40,  yer: 'Mekke' },
+  { no: 79,  ad: 'Nâziât',        ayet: 46,  yer: 'Mekke' },
+  { no: 80,  ad: 'Abese',         ayet: 42,  yer: 'Mekke' },
+  { no: 81,  ad: 'Tekvîr',        ayet: 29,  yer: 'Mekke' },
+  { no: 82,  ad: 'İnfitâr',       ayet: 19,  yer: 'Mekke' },
+  { no: 83,  ad: 'Mutaffifîn',    ayet: 36,  yer: 'Mekke' },
+  { no: 84,  ad: 'İnşikâk',       ayet: 25,  yer: 'Mekke' },
+  { no: 85,  ad: 'Bürûc',         ayet: 22,  yer: 'Mekke' },
+  { no: 86,  ad: 'Târık',         ayet: 17,  yer: 'Mekke' },
+  { no: 87,  ad: 'A\'lâ',         ayet: 19,  yer: 'Mekke' },
+  { no: 88,  ad: 'Gâşiye',        ayet: 26,  yer: 'Mekke' },
+  { no: 89,  ad: 'Fecr',          ayet: 30,  yer: 'Mekke' },
+  { no: 90,  ad: 'Beled',         ayet: 20,  yer: 'Mekke' },
+  { no: 91,  ad: 'Şems',          ayet: 15,  yer: 'Mekke' },
+  { no: 92,  ad: 'Leyl',          ayet: 21,  yer: 'Mekke' },
+  { no: 93,  ad: 'Duhâ',          ayet: 11,  yer: 'Mekke' },
+  { no: 94,  ad: 'İnşirâh',       ayet: 8,   yer: 'Mekke' },
+  { no: 95,  ad: 'Tîn',           ayet: 8,   yer: 'Mekke' },
+  { no: 96,  ad: 'Alak',          ayet: 19,  yer: 'Mekke' },
+  { no: 97,  ad: 'Kadir',         ayet: 5,   yer: 'Mekke' },
+  { no: 98,  ad: 'Beyyine',       ayet: 8,   yer: 'Medine' },
+  { no: 99,  ad: 'Zilzâl',        ayet: 8,   yer: 'Medine' },
+  { no: 100, ad: 'Âdiyât',        ayet: 11,  yer: 'Mekke' },
+  { no: 101, ad: 'Kâria',         ayet: 11,  yer: 'Mekke' },
+  { no: 102, ad: 'Tekâsür',       ayet: 8,   yer: 'Mekke' },
+  { no: 103, ad: 'Asr',           ayet: 3,   yer: 'Mekke' },
+  { no: 104, ad: 'Hümeze',        ayet: 9,   yer: 'Mekke' },
+  { no: 105, ad: 'Fîl',           ayet: 5,   yer: 'Mekke' },
+  { no: 106, ad: 'Kureyş',        ayet: 4,   yer: 'Mekke' },
+  { no: 107, ad: 'Mâûn',          ayet: 7,   yer: 'Mekke' },
+  { no: 108, ad: 'Kevser',        ayet: 3,   yer: 'Mekke' },
+  { no: 109, ad: 'Kâfirûn',       ayet: 6,   yer: 'Mekke' },
+  { no: 110, ad: 'Nasr',          ayet: 3,   yer: 'Medine' },
+  { no: 111, ad: 'Tebbet',        ayet: 5,   yer: 'Mekke' },
+  { no: 112, ad: 'İhlâs',         ayet: 4,   yer: 'Mekke' },
+  { no: 113, ad: 'Felak',         ayet: 5,   yer: 'Mekke' },
+  { no: 114, ad: 'Nâs',           ayet: 6,   yer: 'Mekke' },
+];
+
+function sureGetir(no) { return SURE_LIST.find(s => s.no === Number(no)); }
+
+
+/* ═════════════════════════════════════════════════════════════════
+   BÖLÜM J3: AYET TAKİP MANTIĞI
+   Sıradaki ayet önerisi ve açılır menü doldurma
+   ═════════════════════════════════════════════════════════════════ */
+function sonIslenenGetir() { return state.takip.sonIslenen; }
+
+function siradakiGetir() {
+  const son = state.takip.sonIslenen;
+  if (!son) return { sureNo: 1, ayetNo: 1, etiket: 'Fâtiha 1', sureAd: 'Fâtiha' };
+  const [sureNo, ayetNo] = son.split('-').map(Number);
+  const sure = sureGetir(sureNo);
+  if (!sure) return { sureNo: 1, ayetNo: 1, etiket: 'Fâtiha 1', sureAd: 'Fâtiha' };
+
+  if (ayetNo < sure.ayet) {
+    return { sureNo, ayetNo: ayetNo + 1, etiket: `${sure.ad} ${ayetNo + 1}`, sureAd: sure.ad };
+  }
+  const sonraki = sureGetir(sureNo + 1);
+  if (sonraki) {
+    return { sureNo: sureNo + 1, ayetNo: 1, etiket: `${sonraki.ad} 1`, sureAd: sonraki.ad };
+  }
+  return { sureNo: 1, ayetNo: 1, etiket: 'Fâtiha 1', sureAd: 'Fâtiha' };
+}
+
+function sureSecenekleriniDoldur(selSure) {
+  selSure.innerHTML = SURE_LIST.map(s =>
+    `<option value="${s.no}">${s.no}. ${s.ad} (${s.ayet} ayet)</option>`
+  ).join('');
+}
+
+function ayetSecenekleriniDoldur(selAyet, sureNo) {
+  const sure = sureGetir(sureNo);
+  if (!sure) return;
+  selAyet.innerHTML = Array.from({ length: sure.ayet }, (_, i) =>
+    `<option value="${i + 1}">${i + 1}. ayet</option>`
+  ).join('');
+}
+
+function isaretleFromSelect() {
+  const sureNo = Number(document.querySelector('#sel-sure').value);
+  const ayetNo = Number(document.querySelector('#sel-ayet').value);
+  if (!sureNo || !ayetNo) return;
+  ayetIsaretle(sureNo, ayetNo);
+  document.dispatchEvent(new CustomEvent('takip-guncellendi'));
+}
+
+
+/* ═════════════════════════════════════════════════════════════════
+   BÖLÜM J4: JSON YÜKLE / KAYDET
+   ═════════════════════════════════════════════════════════════════ */
+function jsonDosyasiSec() {
+  return new Promise((resolve) => {
+    const inp = document.createElement('input');
+    inp.type = 'file';
+    inp.accept = '.json,application/json';
+    inp.onchange = () => {
+      const file = inp.files[0];
+      if (!file) return resolve(null);
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          state.json = data;
+          resolve(data);
+        } catch (e) {
+          alert('JSON okunamadı: ' + e.message);
+          resolve(null);
+        }
+      };
+      reader.readAsText(file);
+    };
+    inp.click();
+  });
+}
+
+function jsonIndir() {
+  if (!state.json) return alert('Önce JSON yükleyin.');
+  const blob = new Blob([JSON.stringify(state.json, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `ayet-${state.json?.videolar?.[0]?.sure || 'sablon'}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  jsonKaydet(state.json);
+}
+
+
+/* ═════════════════════════════════════════════════════════════════
+   BÖLÜM J5: META KOPYALAMA
+   Başlık, açıklama, hashtag, etiket, sabit yorum
+   ═════════════════════════════════════════════════════════════════ */
+async function kopyala(tur) {
+  const v = state.aktifVideo;
+  let metin = '';
+  switch (tur) {
+    case 'baslik':   metin = v?.youtube?.baslik || ''; break;
+    case 'aciklama': metin = v?.youtube?.aciklama || ''; break;
+    case 'hashtag':  metin = (v?.youtube?.hashtagler || []).join(' '); break;
+    case 'etiket':   metin = (v?.youtube?.etiketler || []).join(', '); break;
+    case 'sabitYorum': metin = state.json?.sabitYorum || ''; break;
+  }
+  if (!metin) return alert('İçerik boş.');
+  try {
+    await navigator.clipboard.writeText(metin);
+    const b = document.querySelector(`[data-copy="${tur}"]`);
+    if (b) { const eski = b.textContent; b.textContent = '✓ Kopyalandı'; setTimeout(()=>b.textContent = eski, 1200); }
+  } catch { alert('Kopyalanamadı.'); }
+}
+
+
+/* ═════════════════════════════════════════════════════════════════
+   BÖLÜM J6: SÜSLEMELER
+   Altın çerçeve, köşe motifi, geometrik desen, ayırıcı
+   ═════════════════════════════════════════════════════════════════ */
+function geometrikDesen(ctx, w, h) {
+  ctx.save();
+  ctx.globalAlpha = 0.06;
+  ctx.strokeStyle = '#c9a227';
+  ctx.lineWidth = 2;
+  const adim = Math.min(w, h) / 14;
+  for (let y = 0; y < h; y += adim) {
+    for (let x = 0; x < w; x += adim) {
+      const cx = x + adim / 2, cy = y + adim / 2;
+      const r = adim * 0.42;
+      ctx.beginPath();
+      for (let i = 0; i < 8; i++) {
+        const a = (Math.PI / 4) * i + Math.PI / 8;
+        const px = cx + r * Math.cos(a);
+        const py = cy + r * Math.sin(a);
+        i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+
+function altinCerceve(ctx, w, h) {
+  ctx.save();
+  ctx.strokeStyle = '#c9a227';
+  const m = Math.min(w, h) * 0.05;
+  ctx.lineWidth = Math.max(3, Math.min(w, h) * 0.004);
+  ctx.strokeRect(m, m, w - 2*m, h - 2*m);
+  ctx.lineWidth = Math.max(1, Math.min(w, h) * 0.0015);
+  const m2 = m + Math.min(w, h) * 0.012;
+  ctx.strokeRect(m2, m2, w - 2*m2, h - 2*m2);
+  ctx.restore();
+}
+
+function koseMotifi(ctx, x, y, boyut, yon = 'sol-ust') {
+  ctx.save();
+  ctx.translate(x, y);
+  if (yon === 'sag-ust') ctx.scale(-1, 1);
+  if (yon === 'sol-alt') ctx.scale(1, -1);
+  if (yon === 'sag-alt') ctx.scale(-1, -1);
+  ctx.strokeStyle = '#c9a227';
+  ctx.lineWidth = Math.max(2, boyut * 0.04);
+  ctx.beginPath();
+  ctx.moveTo(0, boyut);
+  ctx.quadraticCurveTo(0, 0, boyut, 0);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(boyut * 0.28, boyut * 0.28, boyut * 0.12, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function tumKoseMotifleri(ctx, w, h) {
+  const m = Math.min(w, h) * 0.06;
+  const b = Math.min(w, h) * 0.1;
+  koseMotifi(ctx, m, m, b, 'sol-ust');
+  koseMotifi(ctx, w - m, m, b, 'sag-ust');
+  koseMotifi(ctx, m, h - m, b, 'sol-alt');
+  koseMotifi(ctx, w - m, h - m, b, 'sag-alt');
+}
+
+function ayirici(ctx, x, y, genislik) {
+  ctx.save();
+  ctx.strokeStyle = '#c9a227';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.lineTo(x + genislik, y);
+  ctx.stroke();
+  ctx.fillStyle = '#c9a227';
+  ctx.font = `${Math.round(genislik * 0.05)}px serif`;
+  ctx.textAlign = 'center';
+  ctx.fillText('✦', x + genislik / 2, y + 8);
+  ctx.restore();
+}
+
+
+/* ═════════════════════════════════════════════════════════════════
+   BÖLÜM J7: VİDEO ÇİZİMİ
+   Ölçek tablosu (dikey + yatay) + animasyon zaman çizelgesi
+   ═════════════════════════════════════════════════════════════════ */
+const OLCEK = {
+  dikey: { w: 1080, h: 1920 },
+  yatay: { w: 3840, h: 2160 },
+};
+
+// Format bazlı ölçek katsayıları (genişliğe göre)
+const OLCEK_TABLOSU = {
+  dikey: {
+    padX: 0.09, padY: 0.10,
+    besmeleAr: 0.045, besmeleTr: 0.016,
+    baslik: 0.022,
+    ayetAr: 0.045, ayetTr: 0.020,
+    kaynak: 0.014,
+    hadisMetin: 0.018,
+    amin: 0.030,
+    ayiriciBosluk: 0.045,
+    satirYogunluk: 0.055,
+  },
+  yatay: {
+    padX: 0.14, padY: 0.14,
+    besmeleAr: 0.026, besmeleTr: 0.010,
+    baslik: 0.014,
+    ayetAr: 0.030, ayetTr: 0.013,
+    kaynak: 0.009,
+    hadisMetin: 0.012,
+    amin: 0.020,
+    ayiriciBosluk: 0.028,
+    satirYogunluk: 0.036,
+  },
+};
+
+// Animasyon zaman çizelgesi (saniye)
+const ZAMAN = {
+  besmele: 0.3,
+  ayetBaslik: 1.5,
+  ayetAr: 2.5,
+  ayetTr: 4.5,
+  ayetKaynak: 6.0,
+  hadisBaslik: 7.5,
+  hadisMetin: 9.0,
+  hadisKaynak: 11.0,
+  duaBaslik: 12.5,
+  duaMetin: 14.0,
+  amin: 16.0,
+};
+const GIRIS_SURE = 0.8;
+
+function alfa(t, baslangic, sure = GIRIS_SURE) {
+  if (t < baslangic) return 0;
+  if (t >= baslangic + sure) return 1;
+  return (t - baslangic) / sure;
+}
+
+function boyutGetir(orient) { return OLCEK[orient] || OLCEK.dikey; }
+
+function onizlemeCiz(orient = state.aktifOrient, video = state.aktifVideo) {
+  const canvas = document.querySelector('#canvas-onizleme');
+  if (!canvas) return;
+  const { w, h } = boyutGetir(orient);
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  ciz(ctx, w, h, video, orient, 30);
+}
+
+function ciz(ctx, w, h, v, orient, t = 30) {
+  const O = OLCEK_TABLOSU[orient] || OLCEK_TABLOSU.dikey;
+
+  // Arka plan fade-in
+  const bgAlfa = Math.min(1, t / 0.5);
+  ctx.save();
+  ctx.globalAlpha = bgAlfa;
+  const g = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, Math.max(w, h) * 0.7);
+  g.addColorStop(0, '#0f2238');
+  g.addColorStop(1, '#050e18');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+  geometrikDesen(ctx, w, h);
+  altinCerceve(ctx, w, h);
+  tumKoseMotifleri(ctx, w, h);
+  ctx.restore();
+
+  if (!v) {
+    ctx.fillStyle = '#a89a7a';
+    ctx.font = `${Math.round(w * 0.03)}px serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText('JSON yükleyin…', w/2, h/2);
+    return;
+  }
+
+  const pad = w * O.padX;
+  const ortaX = w / 2;
+  let y = h * O.padY;
+  let a;
+
+  // BESMELE
+  a = alfa(t, ZAMAN.besmele);
+  if (a > 0) {
+    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
+    ctx.fillStyle = '#c9a227';
+    ctx.font = `bold ${Math.round(w * O.besmeleAr)}px "Amiri", serif`;
+    ctx.fillText(v.besmele?.arapca || 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', ortaX, y);
+    y += w * O.besmeleAr * 0.7;
+    ctx.fillStyle = '#a89a7a';
+    ctx.font = `${Math.round(w * O.besmeleTr)}px "Cormorant Garamond", serif`;
+    ctx.fillText(v.besmele?.turkce || 'Rahmân ve Rahîm olan Allah\'ın adıyla', ortaX, y);
+    y += w * O.besmeleTr * 1.5;
+    ctx.restore();
+  } else { y += w * O.besmeleAr * 0.7 + w * O.besmeleTr * 1.5; }
+
+  // AYIRICI 1
+  a = alfa(t, ZAMAN.besmele + 0.5);
+  if (a > 0) { ctx.save(); ctx.globalAlpha = a; ayirici(ctx, pad, y, w - pad*2); ctx.restore(); }
+  y += w * O.ayiriciBosluk;
+
+  // AYET BAŞLIK
+  a = alfa(t, ZAMAN.ayetBaslik);
+  if (a > 0) {
+    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
+    ctx.fillStyle = '#c9a227';
+    ctx.font = `bold ${Math.round(w * O.baslik)}px "Cormorant Garamond", serif`;
+    ctx.fillText(v.ayet?.baslik || 'Ayet', ortaX, y);
+    ctx.restore();
+  }
+  y += w * O.baslik * 1.5;
+
+  // ARAPÇA AYET
+  a = alfa(t, ZAMAN.ayetAr);
+  if (a > 0) {
+    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
+    ctx.fillStyle = '#f5e6c8';
+    ctx.font = `${Math.round(w * O.ayetAr)}px "Amiri", serif`;
+    satirSar(ctx, v.ayet?.arapca || '', ortaX, y, w - pad*2, w * O.satirYogunluk);
+    ctx.restore();
+  }
+  y += satirSayisi(ctx, v.ayet?.arapca || '', w - pad*2, w * O.satirYogunluk) * w * O.satirYogunluk + w * O.satirYogunluk * 0.3;
+
+  // TÜRKÇE MEAL
+  a = alfa(t, ZAMAN.ayetTr);
+  if (a > 0) {
+    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
+    ctx.fillStyle = '#e8dcc0';
+    ctx.font = `${Math.round(w * O.ayetTr)}px "Cormorant Garamond", serif`;
+    satirSar(ctx, v.ayet?.turkce || '', ortaX, y, w - pad*2, w * O.ayetTr * 1.5);
+    ctx.restore();
+  }
+  y += satirSayisi(ctx, v.ayet?.turkce || '', w - pad*2, w * O.ayetTr * 1.5) * w * O.ayetTr * 1.5 + w * O.ayetTr * 0.5;
+
+  // AYET KAYNAK
+  a = alfa(t, ZAMAN.ayetKaynak);
+  if (a > 0) {
+    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
+    ctx.fillStyle = '#a89a7a';
+    ctx.font = `${Math.round(w * O.kaynak)}px "Cormorant Garamond", serif`;
+    ctx.fillText('— ' + (v.ayet?.kaynak || ''), ortaX, y);
+    ctx.restore();
+  }
+  y += w * O.kaynak * 2;
+
+  // AYIRICI 2
+  a = alfa(t, ZAMAN.hadisBaslik - 0.3);
+  if (a > 0) { ctx.save(); ctx.globalAlpha = a; ayirici(ctx, pad, y, w - pad*2); ctx.restore(); }
+  y += w * O.ayiriciBosluk;
+
+  // HADİS BAŞLIK
+  a = alfa(t, ZAMAN.hadisBaslik);
+  if (a > 0) {
+    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
+    ctx.fillStyle = '#c9a227';
+    ctx.font = `bold ${Math.round(w * O.baslik * 0.9)}px "Cormorant Garamond", serif`;
+    ctx.fillText(v.hadis?.baslik || 'Hadis', ortaX, y);
+    ctx.restore();
+  }
+  y += w * O.baslik * 1.4;
+
+  // HADİS METİN
+  a = alfa(t, ZAMAN.hadisMetin);
+  if (a > 0) {
+    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
+    ctx.fillStyle = '#e8dcc0';
+    ctx.font = `${Math.round(w * O.hadisMetin)}px "Cormorant Garamond", serif`;
+    satirSar(ctx, v.hadis?.metin || '', ortaX, y, w - pad*2, w * O.hadisMetin * 1.5);
+    ctx.restore();
+  }
+  y += satirSayisi(ctx, v.hadis?.metin || '', w - pad*2, w * O.hadisMetin * 1.5) * w * O.hadisMetin * 1.5 + w * O.hadisMetin * 0.4;
+
+  // HADİS KAYNAK
+  a = alfa(t, ZAMAN.hadisKaynak);
+  if (a > 0) {
+    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
+    ctx.fillStyle = '#a89a7a';
+    ctx.font = `${Math.round(w * O.kaynak)}px "Cormorant Garamond", serif`;
+    ctx.fillText('— ' + (v.hadis?.kaynak || ''), ortaX, y);
+    ctx.restore();
+  }
+  y += w * O.kaynak * 2;
+
+  // AYIRICI 3
+  a = alfa(t, ZAMAN.duaBaslik - 0.3);
+  if (a > 0) { ctx.save(); ctx.globalAlpha = a; ayirici(ctx, pad, y, w - pad*2); ctx.restore(); }
+  y += w * O.ayiriciBosluk;
+
+  // DUA BAŞLIK
+  a = alfa(t, ZAMAN.duaBaslik);
+  if (a > 0) {
+    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
+    ctx.fillStyle = '#c9a227';
+    ctx.font = `bold ${Math.round(w * O.baslik * 0.9)}px "Cormorant Garamond", serif`;
+    ctx.fillText(v.dua?.baslik || 'Dua', ortaX, y);
+    ctx.restore();
+  }
+  y += w * O.baslik * 1.4;
+
+  // DUA METİN
+  a = alfa(t, ZAMAN.duaMetin);
+  if (a > 0) {
+    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
+    ctx.fillStyle = '#e8dcc0';
+    ctx.font = `${Math.round(w * O.hadisMetin)}px "Cormorant Garamond", serif`;
+    satirSar(ctx, v.dua?.metin || '', ortaX, y, w - pad*2, w * O.hadisMetin * 1.5);
+    ctx.restore();
+  }
+  y += satirSayisi(ctx, v.dua?.metin || '', w - pad*2, w * O.hadisMetin * 1.5) * w * O.hadisMetin * 1.5 + w * O.amin * 1.2;
+
+  // ÂMÎN — parlama animasyonu
+  a = alfa(t, ZAMAN.amin, 1.0);
+  if (a > 0) {
+    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
+    const parlama = t > ZAMAN.amin ? 0.75 + 0.25 * Math.sin((t - ZAMAN.amin) * 2.5) : 1;
+    ctx.fillStyle = `rgba(201, 162, 39, ${parlama})`;
+    ctx.shadowColor = `rgba(224, 196, 104, ${parlama})`;
+    ctx.shadowBlur = w * 0.02 * parlama;
+    ctx.font = `${Math.round(w * O.amin)}px "Amiri", serif`;
+    ctx.fillText(v.dua?.amin || 'آمِين', ortaX, y);
+    ctx.restore();
+  }
+}
+
+function satirSar(ctx, metin, x, y, maxGen, satirY) {
+  const kelimeler = metin.split(' ');
+  let satir = '';
+  let yy = y;
+  for (const k of kelimeler) {
+    const test = satir ? satir + ' ' + k : k;
+    if (ctx.measureText(test).width > maxGen && satir) {
+      ctx.fillText(satir, x, yy);
+      satir = k;
+      yy += satirY;
+    } else satir = test;
+  }
+  if (satir) ctx.fillText(satir, x, yy);
+}
+
+function satirSayisi(ctx, metin, maxGen, satirY) {
+  const kelimeler = metin.split(' ');
+  let satir = '', sayi = 1;
+  for (const k of kelimeler) {
+    const test = satir ? satir + ' ' + k : k;
+    if (ctx.measureText(test).width > maxGen && satir) { sayi++; satir = k; }
+    else satir = test;
+  }
+  return sayi;
+}
+
+
+/* ═════════════════════════════════════════════════════════════════
+   BÖLÜM J8: 4K MP4 KODLAYICI (WebCodecs + mp4-muxer)
+   ═════════════════════════════════════════════════════════════════ */
+let Muxer, ArrayBufferTarget;
+async function muxerYukle() {
+  if (Muxer) return;
+  try {
+    const mod = await import('./mp4-muxer.js');
+    Muxer = mod.Muxer; ArrayBufferTarget = mod.ArrayBufferTarget;
+  } catch (e) {
+    console.warn('Yerel mp4-muxer yok, CDN kullanılıyor');
+    const mod = await import('https://cdn.jsdelivr.net/npm/mp4-muxer@5/+esm');
+    Muxer = mod.Muxer; ArrayBufferTarget = mod.ArrayBufferTarget;
+  }
+}
+
+async function videoUret(orient = state.aktifOrient) {
+  await muxerYukle();
+  const v = state.aktifVideo;
+  if (!v) return alert('Önce bir ayet yükleyin.');
+
+  const { w, h } = boyutGetir(orient);
+  const fps = 30;
+  const sure = Number(document.querySelector('#inp-sure')?.value || state.json?.ayarlar?.sureSaniye || 35);
+  const bitHizi = Number(document.querySelector('#inp-bitrate').value || 40) * 1_000_000;
+  const codec = document.querySelector('#sel-codec').value;
+
+  const canvas = new OffscreenCanvas(w, h);
+  const ctx = canvas.getContext('2d');
+
+  const muxer = new Muxer({
+    target: new ArrayBufferTarget(),
+    video: { codec: codec.startsWith('hvc1') ? 'hevc' : 'avc', width: w, height: h, frameRate: fps },
+    audio: state.muzik ? { codec: 'aac', numberOfChannels: 2, sampleRate: 48000 } : undefined,
+    fastStart: 'in-memory',
+  });
+
+  const vEnc = new VideoEncoder({
+    output: (chunk, meta) => muxer.addVideoChunk(chunk, meta),
+    error: (e) => console.error('VideoEncoder', e),
+  });
+  vEnc.configure({
+    codec, width: w, height: h, bitrate: bitHizi, framerate: fps,
+    latencyMode: 'quality', hardwareAcceleration: 'prefer-hardware',
+  });
+
+  let aEnc = null;
+  if (state.muzik) aEnc = await sesKodlayiciHazirla(state.muzik, muxer, sure);
+
+  const toplamKare = sure * fps;
+  const overlay = document.querySelector('#overlay');
+  const mesaj = document.querySelector('#overlay-mesaj');
+  const progress = document.querySelector('#overlay-progress');
+  overlay.classList.remove('hidden');
+  mesaj.textContent = 'Kareler kodlanıyor…';
+
+  for (let i = 0; i < toplamKare; i++) {
+    const t = i / fps;
+    ctx.clearRect(0, 0, w, h);
+    ciz(ctx, w, h, v, orient, t);
+    const frame = new VideoFrame(canvas, { timestamp: Math.round((i / fps) * 1_000_000) });
+    vEnc.encode(frame, { keyFrame: i % (fps * 2) === 0 });
+    frame.close();
+    if (vEnc.encodeQueueSize > 8) await new Promise(r => setTimeout(r, 10));
+    if (i % 10 === 0) {
+      progress.style.setProperty('--ilerleme', `${(i / toplamKare) * 100}%`);
+      await new Promise(r => setTimeout(r, 0));
+    }
+  }
+
+  await vEnc.flush();
+  if (aEnc) await aEnc.flush();
+  muxer.finalize();
+
+  const blob = new Blob([muxer.target.buffer], { type: 'video/mp4' });
+  indir(blob, `ayet-${v.sure || 'video'}-${orient}.mp4`);
+
+  overlay.classList.add('hidden');
+  vEnc.close();
+  if (aEnc) aEnc.close();
+}
+
+async function sesKodlayiciHazirla(file, muxer, sure) {
+  const arrayBuf = await file.arrayBuffer();
+  const audioCtx = new OfflineAudioContext(2, 48000 * sure, 48000);
+  const audioBuf = await audioCtx.decodeAudioData(arrayBuf);
+  const src = audioCtx.createBufferSource();
+  src.buffer = audioBuf;
+  src.loop = true;
+  const gain = audioCtx.createGain();
+  gain.gain.value = Number(document.querySelector('#rng-ses').value);
+  src.connect(gain).connect(audioCtx.destination);
+  src.start(0);
+  const rendered = await audioCtx.startRendering();
+
+  const aEnc = new AudioEncoder({
+    output: (chunk, meta) => muxer.addAudioChunk(chunk, meta),
+    error: (e) => console.error('AudioEncoder', e),
+  });
+  aEnc.configure({ codec: 'mp4a.40.2', sampleRate: 48000, numberOfChannels: 2, bitrate: 160000 });
+
+  const ch0 = rendered.getChannelData(0);
+  const ch1 = rendered.getChannelData(1);
+  const kare = 1024;
+  for (let i = 0; i < ch0.length; i += kare) {
+    const adet = Math.min(kare, ch0.length - i);
+    const data = new Float32Array(adet * 2);
+    for (let j = 0; j < adet; j++) { data[j*2] = ch0[i+j]; data[j*2+1] = ch1[i+j]; }
+    const audioData = new AudioData({
+      format: 'f32-planar', sampleRate: 48000,
+      numberOfFrames: adet, numberOfChannels: 2,
+      timestamp: Math.round((i / 48000) * 1_000_000), data,
+    });
+    aEnc.encode(audioData);
+    audioData.close();
+  }
+  return aEnc;
+}
+
+function indir(blob, ad) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = ad; a.click();
+  URL.revokeObjectURL(url);
+}
+
+
+/* ═════════════════════════════════════════════════════════════════
+   BÖLÜM J9: UI BAĞLAYICI
+   DOM olaylarını ve seçimleri bağlar
+   ═════════════════════════════════════════════════════════════════ */
+function bindUI() {
+  document.querySelector('#btn-json-yukle').onclick = async () => {
+    const data = await jsonDosyasiSec();
+    if (data) {
+      state.aktifVideo = data.videolar?.[0] || null;
+      if (data.ayarlar?.sureSaniye) {
+        const inp = document.querySelector('#inp-sure');
+        if (inp) inp.value = data.ayarlar.sureSaniye;
+      }
+      onizlemeCiz();
+      takipGuncelle();
+    }
+  };
+  document.querySelector('#btn-json-kaydet').onclick = jsonIndir;
+  document.querySelector('#btn-video-uret').onclick = () => videoUret();
+
+  document.querySelectorAll('.preview-tabs button').forEach(b => {
+    b.onclick = () => {
+      document.querySelectorAll('.preview-tabs button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      state.aktifOrient = b.dataset.orient;
+      onizlemeCiz();
+    };
+  });
+
+  document.querySelectorAll('[data-copy]').forEach(b => {
+    b.onclick = () => kopyala(b.dataset.copy);
+  });
+
+  document.querySelector('#inp-muzik').onchange = (e) => {
+    state.muzik = e.target.files[0] || null;
+  };
+
+  document.querySelectorAll('#tabbar button').forEach(b => {
+    b.onclick = () => {
+      document.querySelectorAll('#tabbar button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      document.querySelectorAll('#app > aside, #app > section').forEach(p => p.classList.remove('tab-aktif'));
+      document.querySelector('#' + b.dataset.tab).classList.add('tab-aktif');
+    };
+  });
+
+  const selSure = document.querySelector('#sel-sure');
+  const selAyet = document.querySelector('#sel-ayet');
+  sureSecenekleriniDoldur(selSure);
+
+  const sirada = siradakiGetir();
+  selSure.value = String(sirada.sureNo);
+  ayetSecenekleriniDoldur(selAyet, sirada.sureNo);
+  selAyet.value = String(sirada.ayetNo);
+
+  selSure.onchange = () => {
+    ayetSecenekleriniDoldur(selAyet, Number(selSure.value));
+    selAyet.value = '1';
+  };
+
+  document.querySelector('#btn-isaretle').onclick = isaretleFromSelect;
+
+  document.querySelector('#takip-siradaki').addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON') {
+      const s = siradakiGetir();
+      selSure.value = String(s.sureNo);
+      ayetSecenekleriniDoldur(selAyet, s.sureNo);
+      selAyet.value = String(s.ayetNo);
+      aiPromptKopyala(s);
+    }
+  });
+
+  document.addEventListener('takip-guncellendi', takipGuncelle);
+
+  takipYukle();
+  takipGuncelle();
+  onizlemeCiz();
+}
+
+function takipGuncelle() {
+  const son = sonIslenenGetir();
+  const sirada = siradakiGetir();
+  const elSon = document.querySelector('#takip-son');
+  const elSir = document.querySelector('#takip-siradaki');
+  if (elSon) elSon.innerHTML = `<b>Son işlenen:</b> ${son || '—'}`;
+  if (elSir) elSir.innerHTML =
+    `<b>🎯 Sıradaki:</b> ${sirada.etiket}<br><button class="primary" style="margin-top:8px">▶️ Bu Ayet İçin AI Prompt</button>`;
+}
+
+async function aiPromptKopyala(s) {
+  const prompt = `Sen bir İslami içerik üreticisisin. Aşağıdaki ayet için JSON şablonunu doldur. Sadece JSON döndür.
+
+SIRADAKİ AYET: ${s.sureAd} ${s.ayetNo}
+ÖNCEKİ: ${sonIslenenGetir() || 'yok'}
+
+KURALLAR:
+1. BAŞLIK: 60-70 karakter, duygu kancası + konu + "| Sure AyetNo" + 1 emoji.
+2. AÇIKLAMA 5 bölüm: kanca (ilk 100 karakter), ayet+hadis+dua tam metin, bağlam (iniş yeri+sebebi+fazileti+hadis ref), kaynaklar, CTA.
+3. HASHTAG: 3-5 tane (geniş+konu+format+marka). Başlıkta # YOK.
+4. ETİKETLER: 10-15, virgülle, geniş + uzun kuyruk.
+5. BAĞLAM: gerçek esbâb-ı nüzûl, emin değilsen "rivayet edilir" de.
+
+Format:
+{
+  "sure": "${s.sureAd} ${s.ayetNo}",
+  "besmele": { "arapca": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", "turkce": "Rahmân ve Rahîm olan Allah'ın adıyla" },
+  "ayet": { "baslik": "...", "arapca": "...", "turkce": "...", "kaynak": "..." },
+  "hadis": { "baslik": "...", "metin": "...", "kaynak": "..." },
+  "dua": { "baslik": "...", "metin": "...", "kaynak": "...", "amin": "آمِين" },
+  "baglam": { "inisYeri": "Mekke|Medine", "inisSebebi": "...", "fazileti": "...", "hadisReferans": "..." },
+  "kaynaklar": { "meal": "Diyanet İşleri Başkanlığı", "hadis": "...", "ses": "Telifsiz", "gorsel": "Özgün tasarım" },
+  "youtube": { "baslik": "...", "aciklama": "...", "hashtagler": ["..."], "etiketler": ["..."] }
+}`;
+  try {
+    await navigator.clipboard.writeText(prompt);
+    alert('✓ AI prompt kopyalandı.');
+  } catch { alert('Kopyalanamadı.'); }
+}
+
+
+/* ═════════════════════════════════════════════════════════════════
+   BÖLÜM J10: BAŞLATICI
+   ═════════════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  bindUI();
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(console.warn);
+  }
+});
+
+</script>
+</body>
+</html>

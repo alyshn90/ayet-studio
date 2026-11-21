@@ -1,0 +1,38 @@
+{
+  "meta": { "kanal": "Ayet Hadis Dua", "versiyon": "4.0" },
+  "ayarlar": { "sureSaniye": 35 },
+  "takip": { "sonIslenen": null, "islenenler": [] },
+  "sabitYorum": "🤲 Bu videodaki ayet, hadis ve dua kalbinize şifa olsun.\n📖 Sıradaki ayet için takipte kalın.\n💬 \"Âmin\" yazın, dua zincirine katılın.\n❤️ Paylaşın, sevaba vesile olun.\n🔔 Bildirimleri açın.\n\n#ayet #hadis #dua #amin",
+  "videolar": [
+    {
+      "sure": "Bakara 286",
+      "besmele": { "arapca": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", "turkce": "Rahmân ve Rahîm olan Allah'ın adıyla" },
+      "ayet": {
+        "baslik": "Bakara Suresi, 286. Ayet",
+        "arapca": "لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا",
+        "turkce": "Allah hiç kimseye gücünün üstünde bir şey yüklemez.",
+        "kaynak": "Bakara Suresi, 286. Ayet"
+      },
+      "hadis": { "baslik": "Kolaylık Hadisi", "metin": "Allah sizin için kolaylık diler, zorluk dilemez.", "kaynak": "Buhârî, İman, 29" },
+      "dua": { "baslik": "Kolaylık Duası", "metin": "Rabbimiz! Bize gücümüzün yetmeyeceği yükü yükleme.", "kaynak": "Bakara, 286", "amin": "آمِين" },
+      "baglam": {
+        "inisYeri": "Medine",
+        "inisSebebi": "Bakara Suresi'nin son iki ayeti 'Âmenerrasûlü' olarak bilinir. Hz. Peygamber (s.a.v.) bu iki ayetin gece okunmasını tavsiye etmiştir.",
+        "fazileti": "Gece okunduğunda kişiyi koruduğu rivayet edilir.",
+        "hadisReferans": "Buhârî, Fedâilü'l-Kur'ân, 10"
+      },
+      "kaynaklar": {
+        "meal": "Diyanet İşleri Başkanlığı",
+        "hadis": "Buhârî, Sahîh",
+        "ses": "Telifsiz (Pixabay)",
+        "gorsel": "Özgün tasarım — Ayet Studio"
+      },
+      "youtube": {
+        "baslik": "Allah Kimseye Gücünün Üstünde Yük Yüklemez | Bakara 286 🤲",
+        "aciklama": "Sıkıntı anında kalbe huzur veren ayet: Allah hiç kimseye gücünün üstünde yük yüklemez.\n\n📖 AYET (Bakara, 286)\nArapça: لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا\nTürkçe: \"Allah hiç kimseye gücünün üstünde bir şey yüklemez.\"\n\n📜 HADİS (Buhârî, İman, 29)\n\"Allah sizin için kolaylık diler, zorluk dilemez.\"\n\n🤲 DUA (Bakara, 286)\n\"Rabbimiz! Bize gücümüzün yetmeyeceği yükü yükleme.\"\nÂmîn.\n\n📚 BAĞLAM\nBakara Suresi'nin son iki ayeti 'Âmenerrasûlü' olarak bilinir. (Buhârî, Fedâilü'l-Kur'ân, 10)\n\n🔖 KAYNAKLAR\n• Meal: Diyanet\n• Hadis: Buhârî\n• Ses: Telifsiz\n• Görsel: Özgün\n\n🔔 Abone olun.\n💬 \"Âmin\" yazın.\n\n#ayet #bakara #âmenerrasûlü #dua #ayethadisdua",
+        "hashtagler": ["#ayet", "#bakara", "#âmenerrasûlü", "#dua", "#ayethadisdua"],
+        "etiketler": ["bakara 286", "âmenerrasûlü", "sıkıntı duası", "huzur veren ayetler", "kolaylık duası", "türkçe kuran", "diyanet meal", "ayet hadis dua", "islami video"]
+      }
+    }
+  ]
+}
