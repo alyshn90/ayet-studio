@@ -629,7 +629,7 @@ async function muxerYukle() {
   catch { const mod = await import('https://cdn.jsdelivr.net/npm/mp4-muxer@5.1.5/+esm'); Muxer = mod.Muxer; ArrayBufferTarget = mod.ArrayBufferTarget; }
 }
 
-async function videoUret(orient = state.aktifOrient) {
+async function videoUret(orient = state.aktifOrient, donanim = 'prefer-hardware') {
   const v = state.aktifVideo;
   if (!v) return alert('Önce bir ayet yükleyin.');
   if (typeof VideoEncoder === 'undefined') return alert('Bu tarayıcı video kodlamayı (WebCodecs) desteklemiyor. Güncel Chrome veya Edge kullanın.');
@@ -642,7 +642,7 @@ async function videoUret(orient = state.aktifOrient) {
     const sure = Number(document.querySelector('#inp-sure')?.value || 35);
     const bitHizi = Number(document.querySelector('#inp-bitrate').value || 40) * 1_000_000;
     let codec = document.querySelector('#sel-codec').value;
-    const cfg = { codec, width: w, height: h, bitrate: bitHizi, framerate: fps, latencyMode: 'quality', hardwareAcceleration: 'prefer-hardware' };
+    const cfg = { codec, width: w, height: h, bitrate: bitHizi, framerate: fps, latencyMode: 'quality', hardwareAcceleration: donanim, ...(codec.startsWith('hvc1') ? { hevc: { format: 'hevc' } } : { avc: { format: 'avc' } }) };
     let sup = await VideoEncoder.isConfigSupported(cfg);
     if (!sup.supported && codec.startsWith('hvc1')) {
       cfg.codec = codec = 'avc1.640033'; sup = await VideoEncoder.isConfigSupported(cfg);
@@ -663,8 +663,8 @@ async function videoUret(orient = state.aktifOrient) {
       audio: sesVar ? { codec: 'aac', numberOfChannels: 2, sampleRate: 48000 } : undefined,
       fastStart: 'in-memory',
     });
-    let hata = null;
-    vEnc = new VideoEncoder({ output: (c, m) => muxer.addVideoChunk(c, m), error: (e) => { hata = e; } });
+    let hata = null, parca = 0;
+    vEnc = new VideoEncoder({ output: (c, m) => { parca++; muxer.addVideoChunk(c, m); }, error: (e) => { hata = e; } });
     vEnc.configure(cfg);
     if (sesVar) { mesaj.textContent = 'Ses hazırlanıyor…'; aEnc = await sesKodlayiciHazirla(state.muzik, muxer, sure, (e) => { hata = e; }); }
 
@@ -682,6 +682,10 @@ async function videoUret(orient = state.aktifOrient) {
     mesaj.textContent = 'Dosya hazırlanıyor…';
     await vEnc.flush(); if (aEnc) await aEnc.flush();
     if (hata) throw hata;
+    if (!parca) {
+      if (donanim === 'prefer-hardware') { mesaj.textContent = 'Donanım kodlayıcı yanıt vermedi, yazılım kodlayıcı deneniyor…'; return await videoUret(orient, 'prefer-software'); }
+      throw new Error('Kodlayıcı hiç video karesi üretmedi. "Full HD" ve H.264 seçip tekrar deneyin.');
+    }
     muxer.finalize();
     indir(new Blob([muxer.target.buffer], { type: 'video/mp4' }), `ayet-${v.sure || 'video'}-${orient}.mp4`);
     const tani = ayetTani(v.sure);
