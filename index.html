@@ -3,283 +3,105 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta name="theme-color" content="#0a1929" />
+<meta name="theme-color" content="#050505" />
 <title>Ayet Studio — 4K MP4</title>
 <link rel="manifest" href="manifest.json" />
 <link rel="icon" type="image/svg+xml" href="icon.svg" />
 <link rel="apple-touch-icon" href="icon.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 
-<!-- ═════════════════════════════════════════════════════════════════
-     CSS — İÇİNDEKİLER
-     ─────────────────────────────────────────────────────────────────
-     BÖLÜM C1 → Değişkenler ve Reset        (satır ~50)
-     BÖLÜM C2 → Layout ve Responsive        (satır ~110)
-     BÖLÜM C3 → Bileşenler (form/buton)     (satır ~220)
-     ═════════════════════════════════════════════════════════════════ -->
 <style>
-
-/* ═════════════════════════════════════════════════════════════════
-   BÖLÜM C1: DEĞİŞKENLER VE RESET
-   Renk / font değiştirmek için buraya bakın
-   ═════════════════════════════════════════════════════════════════ */
+/* BÖLÜM C1: DEĞİŞKENLER VE RESET */
 :root {
-  --bg: #0a1929;
-  --bg-soft: #0f2238;
-  --krem: #f5e6c8;
+  --bg: #050505; /* Tam siyah değil, gözü yormayan çok koyu bir siyah */
+  --bg-soft: #111111; 
+  --krem: #ffffff; /* Beyaz */
   --altin: #c9a227;
-  --altin-soft: #e0c468;
-  --metin: #e8dcc0;
-  --metin-soluk: #a89a7a;
-  --cizgi: rgba(201, 162, 39, 0.35);
+  --altin-soft: #e0bb4a;
+  --metin: #ffffff;
+  --metin-soluk: #a0a0a0;
+  --cizgi: rgba(201, 162, 39, 0.4);
   --radius: 12px;
-  --font-arapca: "Amiri", serif;
-  --font-turkce: "Cormorant Garamond", "Inter", serif;
-  --font-ui: "Inter", system-ui, sans-serif;
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
-html, body {
-  height: 100%;
-  background: var(--bg);
-  color: var(--metin);
-  font-family: var(--font-ui);
-  font-size: 15px;
-  overscroll-behavior: none;
-}
-
-button {
-  font-family: inherit;
-  cursor: pointer;
-  border: 1px solid var(--cizgi);
-  background: var(--bg-soft);
-  color: var(--metin);
-  border-radius: var(--radius);
-  padding: 10px 14px;
-  font-size: 14px;
-  transition: background .2s, border-color .2s;
-}
-button:hover { background: #16304d; border-color: var(--altin); }
-button.primary {
-  background: linear-gradient(135deg, var(--altin), var(--altin-soft));
-  color: #0a1929; font-weight: 700; border: none;
-}
+html, body { height: 100%; background: var(--bg); color: var(--metin); font-family: "Inter", system-ui, sans-serif; font-size: 15px; overscroll-behavior: none; }
+button { font-family: inherit; cursor: pointer; border: 1px solid var(--cizgi); background: var(--bg-soft); color: var(--metin); border-radius: var(--radius); padding: 10px 14px; font-size: 14px; transition: background .2s, border-color .2s; }
+button:hover { background: #1d1a10; border-color: var(--altin); }
+button.primary { background: linear-gradient(135deg, var(--altin), var(--altin-soft)); color: #1a1405; font-weight: 700; border: none; }
+button.secondary { background: transparent; border-color: var(--altin); color: var(--altin); }
 button:disabled { opacity: .5; cursor: not-allowed; }
-
-input, select {
-  font-family: inherit;
-  background: var(--bg-soft);
-  border: 1px solid var(--cizgi);
-  color: var(--metin);
-  border-radius: 8px;
-  padding: 8px 10px;
-  font-size: 14px;
-  width: 100%;
-}
-
-h1, h2 { font-family: var(--font-turkce); letter-spacing: .5px; }
+input, select { font-family: inherit; background: var(--bg-soft); border: 1px solid var(--cizgi); color: var(--metin); border-radius: 8px; padding: 8px 10px; font-size: 14px; width: 100%; }
+h1, h2 { font-family: "Cormorant Garamond", serif; letter-spacing: .5px; }
 h1 { font-size: 20px; }
 h2 { font-size: 16px; color: var(--altin-soft); margin-bottom: 10px; }
-
-.badge {
-  font-size: 11px;
-  background: var(--altin);
-  color: var(--bg);
-  padding: 2px 8px;
-  border-radius: 20px;
-  vertical-align: middle;
-  margin-left: 6px;
-}
-
+.badge { font-size: 11px; background: var(--altin); color: var(--bg); padding: 2px 8px; border-radius: 20px; vertical-align: middle; margin-left: 6px; }
 .hidden { display: none !important; }
 
-
-/* ═════════════════════════════════════════════════════════════════
-   BÖLÜM C2: LAYOUT VE RESPONSIVE
-   Masaüstü grid, mobil sekme, yatay mobil
-   ═════════════════════════════════════════════════════════════════ */
-#topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 20px;
-  background: var(--bg-soft);
-  border-bottom: 1px solid var(--cizgi);
-  gap: 12px;
-  flex-wrap: wrap;
-}
-#topbar .actions { display: flex; gap: 8px; flex-wrap: wrap; }
-
-#app {
-  display: grid;
-  grid-template-columns: 280px 1fr 300px;
-  gap: 16px;
-  padding: 16px;
-  height: calc(100vh - 64px);
-  overflow: hidden;
-}
-#panel-takip, #panel-ayarlar {
-  overflow-y: auto;
-  background: var(--bg-soft);
-  border: 1px solid var(--cizgi);
-  border-radius: var(--radius);
-  padding: 14px;
-}
-#panel-onizleme {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  overflow: hidden;
-}
-
+/* BÖLÜM C2: LAYOUT VE RESPONSIVE */
+#topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; background: var(--bg-soft); border-bottom: 1px solid var(--cizgi); gap: 12px; flex-wrap: wrap; }
+#topbar .actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+#app { display: grid; grid-template-columns: 280px 1fr 300px; gap: 16px; padding: 16px; height: calc(100vh - 64px); height: calc(100dvh - 64px); overflow: hidden; }
+#panel-takip, #panel-ayarlar { overflow-y: auto; background: var(--bg-soft); border: 1px solid var(--cizgi); border-radius: var(--radius); padding: 14px; }
+#panel-onizleme { display: flex; flex-direction: column; gap: 12px; overflow: hidden; }
 .preview-tabs { display: flex; gap: 8px; }
 .preview-tabs button { flex: 1; }
-.preview-tabs button.active {
-  background: var(--altin);
-  color: var(--bg);
-  border-color: var(--altin);
-}
-
-.canvas-wrap {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #000;
-  border-radius: var(--radius);
-  overflow: hidden;
-  min-height: 0;
-}
-#canvas-onizleme {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  display: block;
-}
-
+.preview-tabs button.active { background: var(--altin); color: var(--bg); border-color: var(--altin); }
+.canvas-wrap { flex: 1; display: flex; align-items: center; justify-content: center; background: #000; border-radius: var(--radius); overflow: hidden; min-height: 0; position: relative; }
+#canvas-onizleme { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
 #tabbar { display: none; }
 
 @media (max-width: 900px) {
-  #app {
-    grid-template-columns: 1fr;
-    padding: 12px;
-    padding-bottom: 80px;
-    height: calc(100vh - 64px);
-  }
+  #app { grid-template-columns: 1fr; padding: 12px; padding-bottom: 80px; height: calc(100vh - 64px); height: calc(100dvh - 64px); }
   #app > aside, #app > section { display: none; }
   #app > .tab-aktif { display: flex; flex-direction: column; }
   #panel-ayarlar.tab-aktif, #panel-takip.tab-aktif { display: block; }
-
-  #tabbar {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: var(--bg-soft);
-    border-top: 1px solid var(--cizgi);
-    padding: 6px;
-    gap: 4px;
-    z-index: 20;
-  }
-  #tabbar button {
-    background: transparent;
-    border: none;
-    padding: 10px 6px;
-    font-size: 12px;
-    color: var(--metin-soluk);
-  }
+  #tabbar { display: grid; grid-template-columns: repeat(3, 1fr); position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-soft); border-top: 1px solid var(--cizgi); padding: 6px; gap: 4px; z-index: 20; }
+  #tabbar button { background: transparent; border: none; padding: 10px 6px; font-size: 12px; color: var(--metin-soluk); }
   #tabbar button.active { color: var(--altin); font-weight: 700; }
 }
-
 @media (max-height: 500px) and (orientation: landscape) {
   #topbar { padding: 6px 12px; }
-  #app { height: calc(100vh - 48px); padding: 8px; gap: 8px; grid-template-columns: 240px 1fr 260px; }
+  #app { height: calc(100vh - 48px); height: calc(100dvh - 48px); padding: 8px; gap: 8px; grid-template-columns: 240px 1fr 260px; }
   #tabbar { display: none !important; }
   #app > aside, #app > section { display: flex !important; }
 }
 
-
-/* ═════════════════════════════════════════════════════════════════
-   BÖLÜM C3: BİLEŞENLER
-   Form satırları, bilgi kutuları, kopyalama grid, yükleme overlay
-   ═════════════════════════════════════════════════════════════════ */
-.form-row {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-bottom: 10px;
-}
+/* BÖLÜM C3: BİLEŞENLER */
+.form-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
 .form-row label { font-size: 12px; color: var(--metin-soluk); }
-
-.info-box {
-  padding: 10px 12px;
-  background: var(--bg);
-  border: 1px solid var(--cizgi);
-  border-radius: 8px;
-  margin-bottom: 10px;
-  font-size: 13px;
-}
-.info-box.highlight {
-  border-color: var(--altin);
-  background: linear-gradient(135deg, rgba(201,162,39,.12), transparent);
-}
+.info-box { padding: 10px 12px; background: var(--bg); border: 1px solid var(--cizgi); border-radius: 8px; margin-bottom: 10px; font-size: 13px; }
+.info-box.highlight { border-color: var(--altin); background: linear-gradient(135deg, rgba(201,162,39,.12), transparent); }
 .info-box b { color: var(--altin-soft); }
-
 #takip-siradaki button { width: 100%; font-size: 12px; padding: 8px; }
-
-.copy-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px;
-}
+.copy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .copy-grid button { font-size: 12px; padding: 8px; }
 .copy-grid button.wide { grid-column: 1 / -1; }
-
-#overlay {
-  position: fixed; inset: 0;
-  background: rgba(10,25,41,.92);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 16px; z-index: 100;
-  color: var(--krem);
-}
-.spinner {
-  width: 48px; height: 48px;
-  border: 4px solid rgba(201,162,39,.25);
-  border-top-color: var(--altin);
-  border-radius: 50%;
-  animation: don .8s linear infinite;
-}
+#overlay { position: fixed; inset: 0; background: rgba(5,5,5,.92); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; z-index: 100; color: var(--krem); }
+.spinner { width: 48px; height: 48px; border: 4px solid rgba(201,162,39,.25); border-top-color: var(--altin); border-radius: 50%; animation: don .8s linear infinite; }
 @keyframes don { to { transform: rotate(360deg); } }
+#overlay-progress { width: 260px; height: 6px; background: rgba(201,162,39,.2); border-radius: 3px; overflow: hidden; }
+#overlay-progress::after { content: ''; display: block; height: 100%; width: var(--ilerleme, 0%); background: var(--altin); transition: width .2s; }
 
-#overlay-progress {
-  width: 260px; height: 6px;
-  background: rgba(201,162,39,.2);
-  border-radius: 3px; overflow: hidden;
-}
-#overlay-progress::after {
-  content: ''; display: block; height: 100%;
-  width: var(--ilerleme, 0%);
-  background: var(--altin);
-  transition: width .2s;
-}
-
+/* YENİ: JSON Yapıştırma Modalı */
+#modal-yapistir { position: fixed; inset: 0; background: rgba(5,5,5,.9); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
+.modal-icerik { background: var(--bg-soft); border: 1px solid var(--altin); border-radius: var(--radius); padding: 20px; width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+#txt-json { width: 100%; height: 250px; resize: vertical; font-family: monospace; font-size: 13px; background: var(--bg); border: 1px solid var(--cizgi); color: var(--metin); padding: 10px; border-radius: 8px; line-height: 1.4; }
+#txt-json:focus { outline: none; border-color: var(--altin); }
 </style>
 </head>
 <body>
 
-<!-- ═════════════════════════════════════════════════════════════════
-     BÖLÜM H1: HTML YAPISI
-     Üst bar, ana panel, mobil sekme çubuğu, yükleme overlay
-     ═════════════════════════════════════════════════════════════════ -->
+<!-- BÖLÜM H1: HTML YAPISI -->
 <header id="topbar">
-  <h1>🕌 Ayet Studio <span class="badge">4K MP4</span></h1>
+  <h1>🕌 Ayet Studio <span class="badge" id="badge-kalite">4K MP4</span></h1>
   <div class="actions">
-    <button id="btn-json-yukle">📂 JSON Yükle</button>
-    <button id="btn-json-kaydet">💾 JSON Kaydet</button>
+    <button id="btn-json-yukle">📂 Dosyadan Yükle</button>
+    <button id="btn-json-yapistir" class="secondary">📋 Yapıştır</button>
+    <button id="btn-json-kaydet">💾 Kaydet</button>
+    <button id="btn-png-indir" class="secondary">🖼️ PNG</button>
+    <button id="btn-onizle" class="secondary">▶️ Oynat</button>
     <button id="btn-video-uret" class="primary">🎬 Video Üret</button>
   </div>
 </header>
@@ -289,15 +111,10 @@ h2 { font-size: 16px; color: var(--altin-soft); margin-bottom: 10px; }
     <h2>📚 Ayet Takibi</h2>
     <div id="takip-son" class="info-box"></div>
     <div id="takip-siradaki" class="info-box highlight"></div>
-    <div class="form-row">
-      <label>Sure</label>
-      <select id="sel-sure"></select>
-    </div>
-    <div class="form-row">
-      <label>Ayet</label>
-      <select id="sel-ayet"></select>
-    </div>
+    <div class="form-row"><label>Sure</label><select id="sel-sure"></select></div>
+    <div class="form-row"><label>Ayet</label><select id="sel-ayet"></select></div>
     <button id="btn-isaretle">✓ İşlendi Olarak İşaretle</button>
+    <button id="btn-geri-al" class="secondary" style="margin-top:8px;width:100%">↶ Son İşareti Geri Al</button>
   </aside>
 
   <section id="panel-onizleme">
@@ -312,22 +129,12 @@ h2 { font-size: 16px; color: var(--altin-soft); margin-bottom: 10px; }
 
   <aside id="panel-ayarlar">
     <h2>🎵 Müzik</h2>
-    <div class="form-row">
-      <label><input type="checkbox" id="chk-muzik" /> Müzik ekle</label>
-    </div>
-    <div class="form-row">
-      <input type="file" id="inp-muzik" accept="audio/*" />
-    </div>
-    <div class="form-row">
-      <label>Ses seviyesi</label>
-      <input type="range" id="rng-ses" min="0" max="1" step="0.05" value="0.3" />
-    </div>
+    <div class="form-row"><label><input type="checkbox" id="chk-muzik" /> Müzik ekle</label></div>
+    <div class="form-row"><input type="file" id="inp-muzik" accept="audio/*" /></div>
+    <div class="form-row"><label>Ses seviyesi</label><input type="range" id="rng-ses" min="0" max="1" step="0.05" value="0.3" /></div>
 
     <h2>⚙️ Kodlama</h2>
-    <div class="form-row">
-      <label>Bit hızı (Mbps)</label>
-      <input type="number" id="inp-bitrate" value="40" min="10" max="80" />
-    </div>
+    <div class="form-row"><label>Bit hızı (Mbps)</label><input type="number" id="inp-bitrate" value="40" min="10" max="80" /></div>
     <div class="form-row">
       <label>Codec</label>
       <select id="sel-codec">
@@ -335,12 +142,31 @@ h2 { font-size: 16px; color: var(--altin-soft); margin-bottom: 10px; }
         <option value="hvc1.1.6.L150.B0">H.265 (küçük dosya)</option>
       </select>
     </div>
+    <div class="form-row"><label>Çözünürlük</label><select id="sel-kalite"><option value="4k">4K (3840×2160 / 2160×3840)</option><option value="1080">Full HD 1080p (hafif)</option></select></div>
+    <div class="form-row"><label>Süre (saniye)</label><input type="number" id="inp-sure" value="35" min="10" max="120" /></div>
+    <h2>🎨 Tasarım Editörü (<span id="lbl-format" style="color:var(--altin)">Dikey</span>)</h2>
     <div class="form-row">
-      <label>Süre (saniye)</label>
-      <input type="number" id="inp-sure" value="35" min="10" max="120" />
+      <label>Başlık Boyutu <span id="val-baslik" style="float:right">50px</span></label>
+      <input type="range" id="edt-baslik" min="20" max="150" value="50">
     </div>
-
-    <h2>📋 Meta Kopyala</h2>
+    <div class="form-row">
+      <label>Metin Boyutu (Ayet/Hadis/Dua) <span id="val-govde" style="float:right">35px</span></label>
+      <input type="range" id="edt-govde" min="20" max="100" value="35">
+    </div>
+    <div class="form-row">
+      <label>Kaynak Boyutu <span id="val-kaynak" style="float:right">25px</span></label>
+      <input type="range" id="edt-kaynak" min="10" max="60" value="25">
+    </div>
+    <div class="form-row">
+      <label>Satır Aralığı <span id="val-satir" style="float:right">1.6</span></label>
+      <input type="range" id="edt-satir" min="1.2" max="3" step="0.1" value="1.6">
+    </div>
+    <div class="form-row">
+      <label>Bloklar Arası Boşluk <span id="val-bosluk" style="float:right">60px</span></label>
+      <input type="range" id="edt-bosluk" min="20" max="200" value="60">
+    </div>
+    
+<h2>📋 Meta Kopyala</h2>
     <div class="copy-grid">
       <button data-copy="baslik">Başlık</button>
       <button data-copy="aciklama">Açıklama</button>
@@ -357,231 +183,115 @@ h2 { font-size: 16px; color: var(--altin-soft); margin-bottom: 10px; }
   <button data-tab="panel-ayarlar">⚙️ Ayarlar</button>
 </nav>
 
+<!-- YENİ: JSON Yapıştırma Modalı -->
+<div id="modal-yapistir" class="hidden">
+  <div class="modal-icerik">
+    <h2>📋 JSON Metnini Yapıştır</h2>
+    <p style="font-size:12px; color:var(--metin-soluk)">AI sohbet ekranından aldığınız JSON kodunu buraya yapıştırın.</p>
+    <textarea id="txt-json" placeholder="Örnek:&#10;{&#10;  &quot;sure&quot;: &quot;Bakara 286&quot;,&#10;  &quot;ayet&quot;: { ... }&#10;}"></textarea>
+    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+      <button id="btn-yapistir-iptal">İptal</button>
+      <button id="btn-yapistir-yukle" class="primary">Yükle ve Önizle</button>
+    </div>
+  </div>
+</div>
+
 <div id="overlay" class="hidden">
   <div class="spinner"></div>
   <p id="overlay-mesaj">Kareler kodlanıyor…</p>
   <div id="overlay-progress"></div>
 </div>
 
-
-<!-- ═════════════════════════════════════════════════════════════════
-     BÖLÜM J: JAVASCRIPT — İÇİNDEKİLER
-     ─────────────────────────────────────────────────────────────────
-     BÖLÜM J1  → State (merkezi durum + localStorage)
-     BÖLÜM J2  → 114 Sure Listesi
-     BÖLÜM J3  → Ayet Takip Mantığı
-     BÖLÜM J4  → JSON Yükle / Kaydet
-     BÖLÜM J5  → Meta Kopyalama
-     BÖLÜM J6  → Süslemeler (çerçeve, köşe, desen)
-     BÖLÜM J7  → Video Çizimi (ölçek tablosu + animasyon)
-     BÖLÜM J8  → 4K MP4 Kodlayıcı (WebCodecs)
-     BÖLÜM J9  → UI Bağlayıcı (DOM olayları)
-     BÖLÜM J10 → Başlatıcı (init)
-     ═════════════════════════════════════════════════════════════════ -->
 <script type="module">
-
-/* ═════════════════════════════════════════════════════════════════
-   BÖLÜM J1: STATE
-   Tüm uygulama durumu burada. Kalıcı veri: localStorage.
-   ═════════════════════════════════════════════════════════════════ */
+/* BÖLÜM J1: STATE */
 const STORAGE_KEY = 'ayetStudio';
 const TAKIP_KEY = 'ayetStudioTakip';
-
 const state = {
-  json: null,
-  aktifVideo: null,
-  aktifOrient: 'dikey',
-  muzik: null,
+  json: null, aktifVideo: null, aktifOrient: 'dikey', muzik: null, kalite: '4k',
   takip: { sonIslenen: null, islenenler: [] },
+  editor: {
+    dikey: { baslik: 50, govde: 35, kaynak: 25, satir: 1.6, bosluk: 60 },
+    yatay: { baslik: 34, govde: 28, kaynak: 20, satir: 1.45, bosluk: 26 }
+  }
 };
 
 function takipYukle() {
-  try {
-    const raw = localStorage.getItem(TAKIP_KEY);
-    if (raw) state.takip = JSON.parse(raw);
-  } catch {}
+  try { const raw = localStorage.getItem(TAKIP_KEY); if (raw) state.takip = JSON.parse(raw); } catch {}
   return state.takip;
 }
-
-function takipKaydet() {
-  try { localStorage.setItem(TAKIP_KEY, JSON.stringify(state.takip)); } catch {}
-}
-
+function takipKaydet() { try { localStorage.setItem(TAKIP_KEY, JSON.stringify(state.takip)); } catch {} }
 function ayetIsaretle(sureNo, ayetNo) {
   const anahtar = `${sureNo}-${ayetNo}`;
-  if (!state.takip.islenenler.includes(anahtar)) {
-    state.takip.islenenler.push(anahtar);
-  }
+  if (!state.takip.islenenler.includes(anahtar)) state.takip.islenenler.push(anahtar);
   state.takip.sonIslenen = anahtar;
   takipKaydet();
 }
+function jsonKaydet(obj) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(obj)); } catch {} }
 
-function jsonKaydet(obj) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(obj)); } catch {}
-}
-
-
-/* ═════════════════════════════════════════════════════════════════
-   BÖLÜM J2: 114 SURE LİSTESİ
-   Yeni sure güncellemesi olmaz ama iniş yeri vs. düzeltmek için buraya
-   ═════════════════════════════════════════════════════════════════ */
+/* BÖLÜM J2: 114 SURE LİSTESİ */
 const SURE_LIST = [
-  { no: 1,   ad: 'Fâtiha',        ayet: 7,   yer: 'Mekke' },
-  { no: 2,   ad: 'Bakara',        ayet: 286, yer: 'Medine' },
-  { no: 3,   ad: 'Âl-i İmrân',    ayet: 200, yer: 'Medine' },
-  { no: 4,   ad: 'Nisâ',          ayet: 176, yer: 'Medine' },
-  { no: 5,   ad: 'Mâide',         ayet: 120, yer: 'Medine' },
-  { no: 6,   ad: 'En\'âm',        ayet: 165, yer: 'Mekke' },
-  { no: 7,   ad: 'A\'râf',        ayet: 206, yer: 'Mekke' },
-  { no: 8,   ad: 'Enfâl',         ayet: 75,  yer: 'Medine' },
-  { no: 9,   ad: 'Tevbe',         ayet: 129, yer: 'Medine' },
-  { no: 10,  ad: 'Yûnus',         ayet: 109, yer: 'Mekke' },
-  { no: 11,  ad: 'Hûd',           ayet: 123, yer: 'Mekke' },
-  { no: 12,  ad: 'Yûsuf',         ayet: 111, yer: 'Mekke' },
-  { no: 13,  ad: 'Ra\'d',         ayet: 43,  yer: 'Medine' },
-  { no: 14,  ad: 'İbrâhîm',       ayet: 52,  yer: 'Mekke' },
-  { no: 15,  ad: 'Hicr',          ayet: 99,  yer: 'Mekke' },
-  { no: 16,  ad: 'Nahl',          ayet: 128, yer: 'Mekke' },
-  { no: 17,  ad: 'İsrâ',          ayet: 111, yer: 'Mekke' },
-  { no: 18,  ad: 'Kehf',          ayet: 110, yer: 'Mekke' },
-  { no: 19,  ad: 'Meryem',        ayet: 98,  yer: 'Mekke' },
-  { no: 20,  ad: 'Tâhâ',          ayet: 135, yer: 'Mekke' },
-  { no: 21,  ad: 'Enbiyâ',        ayet: 112, yer: 'Mekke' },
-  { no: 22,  ad: 'Hac',           ayet: 78,  yer: 'Medine' },
-  { no: 23,  ad: 'Mü\'minûn',     ayet: 118, yer: 'Mekke' },
-  { no: 24,  ad: 'Nûr',           ayet: 64,  yer: 'Medine' },
-  { no: 25,  ad: 'Furkân',        ayet: 77,  yer: 'Mekke' },
-  { no: 26,  ad: 'Şuarâ',         ayet: 227, yer: 'Mekke' },
-  { no: 27,  ad: 'Neml',          ayet: 93,  yer: 'Mekke' },
-  { no: 28,  ad: 'Kasas',         ayet: 88,  yer: 'Mekke' },
-  { no: 29,  ad: 'Ankebût',       ayet: 69,  yer: 'Mekke' },
-  { no: 30,  ad: 'Rûm',           ayet: 60,  yer: 'Mekke' },
-  { no: 31,  ad: 'Lokmân',        ayet: 34,  yer: 'Mekke' },
-  { no: 32,  ad: 'Secde',         ayet: 30,  yer: 'Mekke' },
-  { no: 33,  ad: 'Ahzâb',         ayet: 73,  yer: 'Medine' },
-  { no: 34,  ad: 'Sebe\'',        ayet: 54,  yer: 'Mekke' },
-  { no: 35,  ad: 'Fâtır',         ayet: 45,  yer: 'Mekke' },
-  { no: 36,  ad: 'Yâsîn',         ayet: 83,  yer: 'Mekke' },
-  { no: 37,  ad: 'Sâffât',        ayet: 182, yer: 'Mekke' },
-  { no: 38,  ad: 'Sâd',           ayet: 88,  yer: 'Mekke' },
-  { no: 39,  ad: 'Zümer',         ayet: 75,  yer: 'Mekke' },
-  { no: 40,  ad: 'Mü\'min',       ayet: 85,  yer: 'Mekke' },
-  { no: 41,  ad: 'Fussilet',      ayet: 54,  yer: 'Mekke' },
-  { no: 42,  ad: 'Şûrâ',          ayet: 53,  yer: 'Mekke' },
-  { no: 43,  ad: 'Zuhruf',        ayet: 89,  yer: 'Mekke' },
-  { no: 44,  ad: 'Duhân',         ayet: 59,  yer: 'Mekke' },
-  { no: 45,  ad: 'Câsiye',        ayet: 37,  yer: 'Mekke' },
-  { no: 46,  ad: 'Ahkâf',         ayet: 35,  yer: 'Mekke' },
-  { no: 47,  ad: 'Muhammed',      ayet: 38,  yer: 'Medine' },
-  { no: 48,  ad: 'Fetih',         ayet: 29,  yer: 'Medine' },
-  { no: 49,  ad: 'Hucurât',       ayet: 18,  yer: 'Medine' },
-  { no: 50,  ad: 'Kâf',           ayet: 45,  yer: 'Mekke' },
-  { no: 51,  ad: 'Zâriyât',       ayet: 60,  yer: 'Mekke' },
-  { no: 52,  ad: 'Tûr',           ayet: 49,  yer: 'Mekke' },
-  { no: 53,  ad: 'Necm',          ayet: 62,  yer: 'Mekke' },
-  { no: 54,  ad: 'Kamer',         ayet: 55,  yer: 'Mekke' },
-  { no: 55,  ad: 'Rahmân',        ayet: 78,  yer: 'Medine' },
-  { no: 56,  ad: 'Vâkıa',         ayet: 96,  yer: 'Mekke' },
-  { no: 57,  ad: 'Hadîd',         ayet: 29,  yer: 'Medine' },
-  { no: 58,  ad: 'Mücâdele',      ayet: 22,  yer: 'Medine' },
-  { no: 59,  ad: 'Haşr',          ayet: 24,  yer: 'Medine' },
-  { no: 60,  ad: 'Mümtehine',     ayet: 13,  yer: 'Medine' },
-  { no: 61,  ad: 'Saff',          ayet: 14,  yer: 'Medine' },
-  { no: 62,  ad: 'Cum\'a',        ayet: 11,  yer: 'Medine' },
-  { no: 63,  ad: 'Münâfikûn',     ayet: 11,  yer: 'Medine' },
-  { no: 64,  ad: 'Teğâbün',       ayet: 18,  yer: 'Medine' },
-  { no: 65,  ad: 'Talâk',         ayet: 12,  yer: 'Medine' },
-  { no: 66,  ad: 'Tahrîm',        ayet: 12,  yer: 'Medine' },
-  { no: 67,  ad: 'Mülk',          ayet: 30,  yer: 'Mekke' },
-  { no: 68,  ad: 'Kalem',         ayet: 52,  yer: 'Mekke' },
-  { no: 69,  ad: 'Hâkka',         ayet: 52,  yer: 'Mekke' },
-  { no: 70,  ad: 'Meâric',        ayet: 44,  yer: 'Mekke' },
-  { no: 71,  ad: 'Nûh',           ayet: 28,  yer: 'Mekke' },
-  { no: 72,  ad: 'Cin',           ayet: 28,  yer: 'Mekke' },
-  { no: 73,  ad: 'Müzzemmil',     ayet: 20,  yer: 'Mekke' },
-  { no: 74,  ad: 'Müddessir',     ayet: 56,  yer: 'Mekke' },
-  { no: 75,  ad: 'Kıyâme',        ayet: 40,  yer: 'Mekke' },
-  { no: 76,  ad: 'İnsân',         ayet: 31,  yer: 'Medine' },
-  { no: 77,  ad: 'Mürselât',      ayet: 50,  yer: 'Mekke' },
-  { no: 78,  ad: 'Nebe\'',        ayet: 40,  yer: 'Mekke' },
-  { no: 79,  ad: 'Nâziât',        ayet: 46,  yer: 'Mekke' },
-  { no: 80,  ad: 'Abese',         ayet: 42,  yer: 'Mekke' },
-  { no: 81,  ad: 'Tekvîr',        ayet: 29,  yer: 'Mekke' },
-  { no: 82,  ad: 'İnfitâr',       ayet: 19,  yer: 'Mekke' },
-  { no: 83,  ad: 'Mutaffifîn',    ayet: 36,  yer: 'Mekke' },
-  { no: 84,  ad: 'İnşikâk',       ayet: 25,  yer: 'Mekke' },
-  { no: 85,  ad: 'Bürûc',         ayet: 22,  yer: 'Mekke' },
-  { no: 86,  ad: 'Târık',         ayet: 17,  yer: 'Mekke' },
-  { no: 87,  ad: 'A\'lâ',         ayet: 19,  yer: 'Mekke' },
-  { no: 88,  ad: 'Gâşiye',        ayet: 26,  yer: 'Mekke' },
-  { no: 89,  ad: 'Fecr',          ayet: 30,  yer: 'Mekke' },
-  { no: 90,  ad: 'Beled',         ayet: 20,  yer: 'Mekke' },
-  { no: 91,  ad: 'Şems',          ayet: 15,  yer: 'Mekke' },
-  { no: 92,  ad: 'Leyl',          ayet: 21,  yer: 'Mekke' },
-  { no: 93,  ad: 'Duhâ',          ayet: 11,  yer: 'Mekke' },
-  { no: 94,  ad: 'İnşirâh',       ayet: 8,   yer: 'Mekke' },
-  { no: 95,  ad: 'Tîn',           ayet: 8,   yer: 'Mekke' },
-  { no: 96,  ad: 'Alak',          ayet: 19,  yer: 'Mekke' },
-  { no: 97,  ad: 'Kadir',         ayet: 5,   yer: 'Mekke' },
-  { no: 98,  ad: 'Beyyine',       ayet: 8,   yer: 'Medine' },
-  { no: 99,  ad: 'Zilzâl',        ayet: 8,   yer: 'Medine' },
-  { no: 100, ad: 'Âdiyât',        ayet: 11,  yer: 'Mekke' },
-  { no: 101, ad: 'Kâria',         ayet: 11,  yer: 'Mekke' },
-  { no: 102, ad: 'Tekâsür',       ayet: 8,   yer: 'Mekke' },
-  { no: 103, ad: 'Asr',           ayet: 3,   yer: 'Mekke' },
-  { no: 104, ad: 'Hümeze',        ayet: 9,   yer: 'Mekke' },
-  { no: 105, ad: 'Fîl',           ayet: 5,   yer: 'Mekke' },
-  { no: 106, ad: 'Kureyş',        ayet: 4,   yer: 'Mekke' },
-  { no: 107, ad: 'Mâûn',          ayet: 7,   yer: 'Mekke' },
-  { no: 108, ad: 'Kevser',        ayet: 3,   yer: 'Mekke' },
-  { no: 109, ad: 'Kâfirûn',       ayet: 6,   yer: 'Mekke' },
-  { no: 110, ad: 'Nasr',          ayet: 3,   yer: 'Medine' },
-  { no: 111, ad: 'Tebbet',        ayet: 5,   yer: 'Mekke' },
-  { no: 112, ad: 'İhlâs',         ayet: 4,   yer: 'Mekke' },
-  { no: 113, ad: 'Felak',         ayet: 5,   yer: 'Mekke' },
-  { no: 114, ad: 'Nâs',           ayet: 6,   yer: 'Mekke' },
+  { no: 1, ad: 'Fâtiha', ayet: 7 }, { no: 2, ad: 'Bakara', ayet: 286 }, { no: 3, ad: 'Âl-i İmrân', ayet: 200 },
+  { no: 4, ad: 'Nisâ', ayet: 176 }, { no: 5, ad: 'Mâide', ayet: 120 }, { no: 6, ad: 'En\'âm', ayet: 165 },
+  { no: 7, ad: 'A\'râf', ayet: 206 }, { no: 8, ad: 'Enfâl', ayet: 75 }, { no: 9, ad: 'Tevbe', ayet: 129 },
+  { no: 10, ad: 'Yûnus', ayet: 109 }, { no: 11, ad: 'Hûd', ayet: 123 }, { no: 12, ad: 'Yûsuf', ayet: 111 },
+  { no: 13, ad: 'Ra\'d', ayet: 43 }, { no: 14, ad: 'İbrâhîm', ayet: 52 }, { no: 15, ad: 'Hicr', ayet: 99 },
+  { no: 16, ad: 'Nahl', ayet: 128 }, { no: 17, ad: 'İsrâ', ayet: 111 }, { no: 18, ad: 'Kehf', ayet: 110 },
+  { no: 19, ad: 'Meryem', ayet: 98 }, { no: 20, ad: 'Tâhâ', ayet: 135 }, { no: 21, ad: 'Enbiyâ', ayet: 112 },
+  { no: 22, ad: 'Hac', ayet: 78 }, { no: 23, ad: 'Mü\'minûn', ayet: 118 }, { no: 24, ad: 'Nûr', ayet: 64 },
+  { no: 25, ad: 'Furkân', ayet: 77 }, { no: 26, ad: 'Şuarâ', ayet: 227 }, { no: 27, ad: 'Neml', ayet: 93 },
+  { no: 28, ad: 'Kasas', ayet: 88 }, { no: 29, ad: 'Ankebût', ayet: 69 }, { no: 30, ad: 'Rûm', ayet: 60 },
+  { no: 31, ad: 'Lokmân', ayet: 34 }, { no: 32, ad: 'Secde', ayet: 30 }, { no: 33, ad: 'Ahzâb', ayet: 73 },
+  { no: 34, ad: 'Sebe\'', ayet: 54 }, { no: 35, ad: 'Fâtır', ayet: 45 }, { no: 36, ad: 'Yâsîn', ayet: 83 },
+  { no: 37, ad: 'Sâffât', ayet: 182 }, { no: 38, ad: 'Sâd', ayet: 88 }, { no: 39, ad: 'Zümer', ayet: 75 },
+  { no: 40, ad: 'Mü\'min', ayet: 85 }, { no: 41, ad: 'Fussilet', ayet: 54 }, { no: 42, ad: 'Şûrâ', ayet: 53 },
+  { no: 43, ad: 'Zuhruf', ayet: 89 }, { no: 44, ad: 'Duhân', ayet: 59 }, { no: 45, ad: 'Câsiye', ayet: 37 },
+  { no: 46, ad: 'Ahkâf', ayet: 35 }, { no: 47, ad: 'Muhammed', ayet: 38 }, { no: 48, ad: 'Fetih', ayet: 29 },
+  { no: 49, ad: 'Hucurât', ayet: 18 }, { no: 50, ad: 'Kâf', ayet: 45 }, { no: 51, ad: 'Zâriyât', ayet: 60 },
+  { no: 52, ad: 'Tûr', ayet: 49 }, { no: 53, ad: 'Necm', ayet: 62 }, { no: 54, ad: 'Kamer', ayet: 55 },
+  { no: 55, ad: 'Rahmân', ayet: 78 }, { no: 56, ad: 'Vâkıa', ayet: 96 }, { no: 57, ad: 'Hadîd', ayet: 29 },
+  { no: 58, ad: 'Mücâdele', ayet: 22 }, { no: 59, ad: 'Haşr', ayet: 24 }, { no: 60, ad: 'Mümtehine', ayet: 13 },
+  { no: 61, ad: 'Saff', ayet: 14 }, { no: 62, ad: 'Cum\'a', ayet: 11 }, { no: 63, ad: 'Münâfikûn', ayet: 11 },
+  { no: 64, ad: 'Teğâbün', ayet: 18 }, { no: 65, ad: 'Talâk', ayet: 12 }, { no: 66, ad: 'Tahrîm', ayet: 12 },
+  { no: 67, ad: 'Mülk', ayet: 30 }, { no: 68, ad: 'Kalem', ayet: 52 }, { no: 69, ad: 'Hâkka', ayet: 52 },
+  { no: 70, ad: 'Meâric', ayet: 44 }, { no: 71, ad: 'Nûh', ayet: 28 }, { no: 72, ad: 'Cin', ayet: 28 },
+  { no: 73, ad: 'Müzzemmil', ayet: 20 }, { no: 74, ad: 'Müddessir', ayet: 56 }, { no: 75, ad: 'Kıyâme', ayet: 40 },
+  { no: 76, ad: 'İnsân', ayet: 31 }, { no: 77, ad: 'Mürselât', ayet: 50 }, { no: 78, ad: 'Nebe\'', ayet: 40 },
+  { no: 79, ad: 'Nâziât', ayet: 46 }, { no: 80, ad: 'Abese', ayet: 42 }, { no: 81, ad: 'Tekvîr', ayet: 29 },
+  { no: 82, ad: 'İnfitâr', ayet: 19 }, { no: 83, ad: 'Mutaffifîn', ayet: 36 }, { no: 84, ad: 'İnşikâk', ayet: 25 },
+  { no: 85, ad: 'Bürûc', ayet: 22 }, { no: 86, ad: 'Târık', ayet: 17 }, { no: 87, ad: 'A\'lâ', ayet: 19 },
+  { no: 88, ad: 'Gâşiye', ayet: 26 }, { no: 89, ad: 'Fecr', ayet: 30 }, { no: 90, ad: 'Beled', ayet: 20 },
+  { no: 91, ad: 'Şems', ayet: 15 }, { no: 92, ad: 'Leyl', ayet: 21 }, { no: 93, ad: 'Duhâ', ayet: 11 },
+  { no: 94, ad: 'İnşirâh', ayet: 8 }, { no: 95, ad: 'Tîn', ayet: 8 }, { no: 96, ad: 'Alak', ayet: 19 },
+  { no: 97, ad: 'Kadir', ayet: 5 }, { no: 98, ad: 'Beyyine', ayet: 8 }, { no: 99, ad: 'Zilzâl', ayet: 8 },
+  { no: 100, ad: 'Âdiyât', ayet: 11 }, { no: 101, ad: 'Kâria', ayet: 11 }, { no: 102, ad: 'Tekâsür', ayet: 8 },
+  { no: 103, ad: 'Asr', ayet: 3 }, { no: 104, ad: 'Hümeze', ayet: 9 }, { no: 105, ad: 'Fîl', ayet: 5 },
+  { no: 106, ad: 'Kureyş', ayet: 4 }, { no: 107, ad: 'Mâûn', ayet: 7 }, { no: 108, ad: 'Kevser', ayet: 3 },
+  { no: 109, ad: 'Kâfirûn', ayet: 6 }, { no: 110, ad: 'Nasr', ayet: 3 }, { no: 111, ad: 'Tebbet', ayet: 5 },
+  { no: 112, ad: 'İhlâs', ayet: 4 }, { no: 113, ad: 'Felak', ayet: 5 }, { no: 114, ad: 'Nâs', ayet: 6 }
 ];
-
 function sureGetir(no) { return SURE_LIST.find(s => s.no === Number(no)); }
 
-
-/* ═════════════════════════════════════════════════════════════════
-   BÖLÜM J3: AYET TAKİP MANTIĞI
-   Sıradaki ayet önerisi ve açılır menü doldurma
-   ═════════════════════════════════════════════════════════════════ */
+/* BÖLÜM J3: AYET TAKİP MANTIĞI */
 function sonIslenenGetir() { return state.takip.sonIslenen; }
-
 function siradakiGetir() {
   const son = state.takip.sonIslenen;
   if (!son) return { sureNo: 1, ayetNo: 1, etiket: 'Fâtiha 1', sureAd: 'Fâtiha' };
   const [sureNo, ayetNo] = son.split('-').map(Number);
   const sure = sureGetir(sureNo);
   if (!sure) return { sureNo: 1, ayetNo: 1, etiket: 'Fâtiha 1', sureAd: 'Fâtiha' };
-
-  if (ayetNo < sure.ayet) {
-    return { sureNo, ayetNo: ayetNo + 1, etiket: `${sure.ad} ${ayetNo + 1}`, sureAd: sure.ad };
-  }
+  if (ayetNo < sure.ayet) return { sureNo, ayetNo: ayetNo + 1, etiket: `${sure.ad} ${ayetNo + 1}`, sureAd: sure.ad };
   const sonraki = sureGetir(sureNo + 1);
-  if (sonraki) {
-    return { sureNo: sureNo + 1, ayetNo: 1, etiket: `${sonraki.ad} 1`, sureAd: sonraki.ad };
-  }
+  if (sonraki) return { sureNo: sureNo + 1, ayetNo: 1, etiket: `${sonraki.ad} 1`, sureAd: sonraki.ad };
   return { sureNo: 1, ayetNo: 1, etiket: 'Fâtiha 1', sureAd: 'Fâtiha' };
 }
-
 function sureSecenekleriniDoldur(selSure) {
-  selSure.innerHTML = SURE_LIST.map(s =>
-    `<option value="${s.no}">${s.no}. ${s.ad} (${s.ayet} ayet)</option>`
-  ).join('');
+  selSure.innerHTML = SURE_LIST.map(s => `<option value="${s.no}">${s.no}. ${s.ad} (${s.ayet} ayet)</option>`).join('');
 }
-
 function ayetSecenekleriniDoldur(selAyet, sureNo) {
   const sure = sureGetir(sureNo);
   if (!sure) return;
-  selAyet.innerHTML = Array.from({ length: sure.ayet }, (_, i) =>
-    `<option value="${i + 1}">${i + 1}. ayet</option>`
-  ).join('');
+  selAyet.innerHTML = Array.from({ length: sure.ayet }, (_, i) => `<option value="${i + 1}">${i + 1}. ayet</option>`).join('');
 }
-
 function isaretleFromSelect() {
   const sureNo = Number(document.querySelector('#sel-sure').value);
   const ayetNo = Number(document.querySelector('#sel-ayet').value);
@@ -590,28 +300,73 @@ function isaretleFromSelect() {
   document.dispatchEvent(new CustomEvent('takip-guncellendi'));
 }
 
+function ayetGeriAl() {
+  const l = state.takip.islenenler;
+  if (!l.length) return alert('Geri alınacak kayıt yok.');
+  l.pop(); state.takip.sonIslenen = l[l.length - 1] || null; takipKaydet();
+}
+const norm = (x) => String(x).toLocaleLowerCase('tr').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9ı]/g, '');
+function ayetTani(str) { // "Bakara 286" -> { sureNo, ayetNo }
+  const m = String(str || '').match(/^(.+?)\s*(\d+)\s*$/);
+  if (!m) return null;
+  const sure = SURE_LIST.find(x => norm(x.ad) === norm(m[1])), ayet = Number(m[2]);
+  return sure && ayet >= 1 && ayet <= sure.ayet ? { sureNo: sure.no, ayetNo: ayet } : null;
+}
 
-/* ═════════════════════════════════════════════════════════════════
-   BÖLÜM J4: JSON YÜKLE / KAYDET
-   ═════════════════════════════════════════════════════════════════ */
+/* BÖLÜM J4: JSON YÜKLE / KAYDET / YAPIŞTIR */
+// Ortak JSON uygulama fonksiyonu
+// YENİ KOD (Akıllı JSON Tanıyıcı)
+function jsonVerisiniUygula(data) {
+  if (!data) return false;
+
+  let videoObj = null;
+  let jsonObj = null;
+
+  // Durum 1: Doğrudan tek bir video objesi yapıştırılmışsa (Sizin gönderdiğiniz gibi)
+  if (data.sure && data.ayet) {
+    videoObj = data;
+    jsonObj = { videolar: [data], sabitYorum: data.sabitYorum || '' };
+  } 
+  // Durum 2: Doğrudan bir dizi yapıştırılmışsa
+  else if (Array.isArray(data) && data.length > 0) {
+    videoObj = data[0];
+    jsonObj = { videolar: data, sabitYorum: '' };
+  }
+  // Durum 3: Standart şablon (videolar dizisi içeren)
+  else if (data.videolar && Array.isArray(data.videolar) && data.videolar.length > 0) {
+    videoObj = data.videolar[0];
+    jsonObj = data;
+  }
+  // Durum 4: Geçersiz format
+  else {
+    alert('Geçersiz JSON formatı. Lütfen geçerli bir ayet şablonu yapıştırdığınızdan emin olun.');
+    return false;
+  }
+
+  state.json = jsonObj;
+  state.aktifVideo = videoObj;
+  jsonKaydet(jsonObj);
+  
+  if (jsonObj.ayarlar?.sureSaniye) {
+    document.querySelector('#inp-sure').value = jsonObj.ayarlar.sureSaniye;
+  }
+  
+  onizlemeCiz();
+  takipGuncelle();
+  return true;
+}
+
 function jsonDosyasiSec() {
   return new Promise((resolve) => {
     const inp = document.createElement('input');
-    inp.type = 'file';
-    inp.accept = '.json,application/json';
+    inp.type = 'file'; inp.accept = '.json,application/json';
     inp.onchange = () => {
       const file = inp.files[0];
       if (!file) return resolve(null);
       const reader = new FileReader();
       reader.onload = () => {
-        try {
-          const data = JSON.parse(reader.result);
-          state.json = data;
-          resolve(data);
-        } catch (e) {
-          alert('JSON okunamadı: ' + e.message);
-          resolve(null);
-        }
+        try { const data = JSON.parse(reader.result); resolve(data); }
+        catch (e) { alert('JSON okunamadı: ' + e.message); resolve(null); }
       };
       reader.readAsText(file);
     };
@@ -624,646 +379,525 @@ function jsonIndir() {
   const blob = new Blob([JSON.stringify(state.json, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = `ayet-${state.json?.videolar?.[0]?.sure || 'sablon'}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-  jsonKaydet(state.json);
+  a.href = url; a.download = `ayet-${state.json?.videolar?.[0]?.sure || 'sablon'}.json`; a.click();
+  URL.revokeObjectURL(url); jsonKaydet(state.json);
 }
 
-
-/* ═════════════════════════════════════════════════════════════════
-   BÖLÜM J5: META KOPYALAMA
-   Başlık, açıklama, hashtag, etiket, sabit yorum
-   ═════════════════════════════════════════════════════════════════ */
+/* BÖLÜM J5: META KOPYALAMA */
 async function kopyala(tur) {
   const v = state.aktifVideo;
   let metin = '';
   switch (tur) {
-    case 'baslik':   metin = v?.youtube?.baslik || ''; break;
+    case 'baslik': metin = v?.youtube?.baslik || ''; break;
     case 'aciklama': metin = v?.youtube?.aciklama || ''; break;
-    case 'hashtag':  metin = (v?.youtube?.hashtagler || []).join(' '); break;
-    case 'etiket':   metin = (v?.youtube?.etiketler || []).join(', '); break;
+    case 'hashtag': metin = (v?.youtube?.hashtagler || []).join(' '); break;
+    case 'etiket': metin = (v?.youtube?.etiketler || []).join(', '); break;
     case 'sabitYorum': metin = state.json?.sabitYorum || ''; break;
   }
   if (!metin) return alert('İçerik boş.');
   try {
     await navigator.clipboard.writeText(metin);
     const b = document.querySelector(`[data-copy="${tur}"]`);
-    if (b) { const eski = b.textContent; b.textContent = '✓ Kopyalandı'; setTimeout(()=>b.textContent = eski, 1200); }
+    if (b) { const eski = b.textContent; b.textContent = '✓ Kopyalandı'; setTimeout(() => b.textContent = eski, 1200); }
   } catch { alert('Kopyalanamadı.'); }
 }
 
+/* BÖLÜM J6: SÜSLEMELER (Mushaf / tezhip tarzı) */
+const R = { kagit1: '#f8eed3', kagit2: '#ecdcb3', kagit3: '#cfb680', murekkep: '#1c2430', lapis: '#1d3c6e', turkuaz: '#1f6f68', altin: '#b08a2e', altinAcik: '#e3c26a', altinKoyu: '#7a5a14', kirmizi: '#8c2f1b' };
+const mk = (w, h) => typeof OffscreenCanvas !== 'undefined' ? new OffscreenCanvas(w, h) : Object.assign(document.createElement('canvas'), { width: w, height: h });
 
-/* ═════════════════════════════════════════════════════════════════
-   BÖLÜM J6: SÜSLEMELER
-   Altın çerçeve, köşe motifi, geometrik desen, ayırıcı
-   ═════════════════════════════════════════════════════════════════ */
-function geometrikDesen(ctx, w, h) {
-  ctx.save();
-  ctx.globalAlpha = 0.06;
-  ctx.strokeStyle = '#c9a227';
-  ctx.lineWidth = 2;
-  const adim = Math.min(w, h) / 14;
-  for (let y = 0; y < h; y += adim) {
-    for (let x = 0; x < w; x += adim) {
-      const cx = x + adim / 2, cy = y + adim / 2;
-      const r = adim * 0.42;
-      ctx.beginPath();
-      for (let i = 0; i < 8; i++) {
-        const a = (Math.PI / 4) * i + Math.PI / 8;
-        const px = cx + r * Math.cos(a);
-        const py = cy + r * Math.sin(a);
-        i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
-      }
-      ctx.closePath();
-      ctx.stroke();
-    }
+function yildiz(ctx, x, y, r, n, ic) {
+  ctx.beginPath();
+  for (let i = 0; i < n * 2; i++) {
+    const a = Math.PI * i / n - Math.PI / 2, q = i % 2 ? r * ic : r;
+    const px = x + q * Math.cos(a), py = y + q * Math.sin(a);
+    i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
   }
+  ctx.closePath();
+}
+function gul(ctx, x, y, r) { // tezhip rozeti
+  ctx.save(); ctx.lineWidth = Math.max(1, r * 0.06); ctx.strokeStyle = R.altinKoyu;
+  ctx.fillStyle = R.altinAcik; yildiz(ctx, x, y, r, 16, 0.82); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = R.lapis; yildiz(ctx, x, y, r * 0.74, 8, 0.6); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = R.turkuaz; ctx.beginPath(); ctx.arc(x, y, r * 0.34, 0, 7); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#f5e2a0'; ctx.beginPath(); ctx.arc(x, y, r * 0.14, 0, 7); ctx.fill();
   ctx.restore();
 }
-
-function altinCerceve(ctx, w, h) {
+function cerceve(ctx, w, h) {
+  const u = Math.min(w, h), m = u * 0.032, bw = u * 0.034, mi = m + bw, m3 = mi + u * 0.012;
+  const g = ctx.createLinearGradient(0, 0, w, h);
+  g.addColorStop(0, R.altinAcik); g.addColorStop(0.5, R.altin); g.addColorStop(1, R.altinAcik);
   ctx.save();
-  ctx.strokeStyle = '#c9a227';
-  const m = Math.min(w, h) * 0.05;
-  ctx.lineWidth = Math.max(3, Math.min(w, h) * 0.004);
-  ctx.strokeRect(m, m, w - 2*m, h - 2*m);
-  ctx.lineWidth = Math.max(1, Math.min(w, h) * 0.0015);
-  const m2 = m + Math.min(w, h) * 0.012;
-  ctx.strokeRect(m2, m2, w - 2*m2, h - 2*m2);
+  ctx.beginPath(); ctx.rect(m, m, w - 2 * m, h - 2 * m); ctx.rect(mi, mi, w - 2 * mi, h - 2 * mi);
+  ctx.fillStyle = R.lapis; ctx.fill('evenodd');
+  ctx.strokeStyle = g; ctx.lineWidth = u * 0.004; ctx.strokeRect(m, m, w - 2 * m, h - 2 * m);
+  ctx.lineWidth = u * 0.003; ctx.strokeRect(mi, mi, w - 2 * mi, h - 2 * mi);
+  ctx.strokeStyle = R.kirmizi; ctx.lineWidth = u * 0.002; ctx.strokeRect(m3, m3, w - 2 * m3, h - 2 * m3);
+  // bant içi elmaslar
+  const d = bw * 0.2, st = bw * 1.5, c = m + bw / 2; ctx.fillStyle = g;
+  const elmas = (x, y) => { ctx.beginPath(); ctx.moveTo(x, y - d); ctx.lineTo(x + d, y); ctx.lineTo(x, y + d); ctx.lineTo(x - d, y); ctx.closePath(); ctx.fill(); };
+  for (let x = mi + bw; x < w - mi - bw * 0.5; x += st) { elmas(x, c); elmas(x, h - c); }
+  for (let y = mi + bw; y < h - mi - bw * 0.5; y += st) { elmas(c, y); elmas(w - c, y); }
+  // köşe yelpazeleri
+  ctx.strokeStyle = g; ctx.fillStyle = R.altin; ctx.lineWidth = u * 0.0025;
+  for (const [sx, sy] of [[1, 1], [-1, 1], [1, -1], [-1, -1]]) {
+    ctx.save(); ctx.translate(sx > 0 ? m3 : w - m3, sy > 0 ? m3 : h - m3); ctx.scale(sx, sy);
+    for (const r of [u * 0.075, u * 0.1, u * 0.125]) { ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI / 2); ctx.stroke(); }
+    for (let i = 1; i < 6; i++) { const a = Math.PI / 12 * i; ctx.beginPath(); ctx.arc(Math.cos(a) * u * 0.1, Math.sin(a) * u * 0.1, u * 0.005, 0, 7); ctx.fill(); }
+    ctx.restore();
+  }
+  // rozetler: dört köşe + dört orta
+  for (const [x, y, r] of [[c, c, 1.2], [w - c, c, 1.2], [c, h - c, 1.2], [w - c, h - c, 1.2], [w / 2, c, 1.15], [w / 2, h - c, 1.15], [c, h / 2, 1], [w - c, h / 2, 1]]) gul(ctx, x, y, bw * r);
+  ctx.restore();
+}
+let bgCache = {};
+function arkaPlan(w, h) { // kâğıt + çerçeve bir kez çizilir, her kareye kopyalanır
+  const key = w + 'x' + h;
+  if (bgCache[key]) return bgCache[key];
+  if (Object.keys(bgCache).length > 3) bgCache = {};
+  const c = mk(w, h), x = c.getContext('2d'), u = Math.min(w, h);
+  const g = x.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, Math.max(w, h) * 0.75);
+  g.addColorStop(0, R.kagit1); g.addColorStop(0.6, R.kagit2); g.addColorStop(1, R.kagit3);
+  x.fillStyle = g; x.fillRect(0, 0, w, h);
+  let sd = 7; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+  x.fillStyle = 'rgba(110,80,30,0.035)';
+  for (let i = 0; i < w * h / 700; i++) x.fillRect(rnd() * w, rnd() * h, 1 + rnd() * u * 0.002, 1 + rnd() * u * 0.002);
+  x.save(); x.globalAlpha = 0.07; x.strokeStyle = R.altinKoyu; x.lineWidth = u * 0.003;
+  for (const [n, r] of [[16, 0.46], [8, 0.34]]) { yildiz(x, w / 2, h / 2, u * r, n, 0.78); x.stroke(); }
+  x.restore();
+  const vg = x.createRadialGradient(w / 2, h / 2, u * 0.4, w / 2, h / 2, Math.max(w, h) * 0.75);
+  vg.addColorStop(0, 'rgba(80,50,10,0)'); vg.addColorStop(1, 'rgba(80,50,10,0.28)');
+  x.fillStyle = vg; x.fillRect(0, 0, w, h);
+  cerceve(x, w, h);
+  return (bgCache[key] = c);
+}
+function kartus(ctx, cx, cy, yuk, metin, font) { // sure başlık levhası
+  ctx.save(); ctx.font = font;
+  const ph = yuk * 0.6, gen = Math.max(ctx.measureText(metin).width + ph * 2 + yuk * 0.8, yuk * 5);
+  const x0 = cx - gen / 2, x1 = cx + gen / 2;
+  const yol = (i) => { ctx.beginPath(); ctx.moveTo(x0 + ph, cy - yuk / 2 + i); ctx.lineTo(x1 - ph, cy - yuk / 2 + i); ctx.lineTo(x1 - i, cy); ctx.lineTo(x1 - ph, cy + yuk / 2 - i); ctx.lineTo(x0 + ph, cy + yuk / 2 - i); ctx.lineTo(x0 + i, cy); ctx.closePath(); };
+  const g = ctx.createLinearGradient(0, cy - yuk / 2, 0, cy + yuk / 2); g.addColorStop(0, R.altinAcik); g.addColorStop(1, R.altin);
+  yol(0); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = yuk * 0.02; ctx.strokeStyle = R.altinKoyu; ctx.stroke();
+  yol(yuk * 0.1); ctx.fillStyle = R.lapis; ctx.fill();
+  yol(yuk * 0.17); ctx.strokeStyle = R.altinAcik; ctx.lineWidth = yuk * 0.015; ctx.stroke();
+  ctx.fillStyle = R.altinAcik; for (const sx of [x0 + ph * 0.62, x1 - ph * 0.62]) { yildiz(ctx, sx, cy, yuk * 0.17, 8, 0.5); ctx.fill(); }
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#f5e2a0'; ctx.fillText(metin, cx, cy + yuk * 0.03);
+  ctx.restore();
+}
+function ayirici(ctx, x, y, gen, u) {
+  ctx.save(); ctx.lineWidth = Math.max(1, u * 0.002);
+  for (const sg of [-1, 1]) {
+    const g = ctx.createLinearGradient(x, 0, x + sg * gen / 2, 0); g.addColorStop(0, R.altin); g.addColorStop(1, 'rgba(176,138,46,0)');
+    ctx.strokeStyle = g; ctx.beginPath(); ctx.moveTo(x + sg * u * 0.03, y); ctx.lineTo(x + sg * gen / 2, y); ctx.stroke();
+  }
+  ctx.fillStyle = R.kirmizi; ctx.strokeStyle = R.altinKoyu; yildiz(ctx, x, y, u * 0.017, 8, 0.5); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = R.altin; for (const sg of [-1, 1]) { yildiz(ctx, x + sg * u * 0.04, y, u * 0.007, 4, 0.5); ctx.fill(); }
   ctx.restore();
 }
 
-function koseMotifi(ctx, x, y, boyut, yon = 'sol-ust') {
-  ctx.save();
-  ctx.translate(x, y);
-  if (yon === 'sag-ust') ctx.scale(-1, 1);
-  if (yon === 'sol-alt') ctx.scale(1, -1);
-  if (yon === 'sag-alt') ctx.scale(-1, -1);
-  ctx.strokeStyle = '#c9a227';
-  ctx.lineWidth = Math.max(2, boyut * 0.04);
-  ctx.beginPath();
-  ctx.moveTo(0, boyut);
-  ctx.quadraticCurveTo(0, 0, boyut, 0);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.arc(boyut * 0.28, boyut * 0.28, boyut * 0.12, 0, Math.PI * 2);
-  ctx.stroke();
-  ctx.restore();
-}
-
-function tumKoseMotifleri(ctx, w, h) {
-  const m = Math.min(w, h) * 0.06;
-  const b = Math.min(w, h) * 0.1;
-  koseMotifi(ctx, m, m, b, 'sol-ust');
-  koseMotifi(ctx, w - m, m, b, 'sag-ust');
-  koseMotifi(ctx, m, h - m, b, 'sol-alt');
-  koseMotifi(ctx, w - m, h - m, b, 'sag-alt');
-}
-
-function ayirici(ctx, x, y, genislik) {
-  ctx.save();
-  ctx.strokeStyle = '#c9a227';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(x, y);
-  ctx.lineTo(x + genislik, y);
-  ctx.stroke();
-  ctx.fillStyle = '#c9a227';
-  ctx.font = `${Math.round(genislik * 0.05)}px serif`;
-  ctx.textAlign = 'center';
-  ctx.fillText('✦', x + genislik / 2, y + 8);
-  ctx.restore();
-}
-
-
-/* ═════════════════════════════════════════════════════════════════
-   BÖLÜM J7: VİDEO ÇİZİMİ
-   Ölçek tablosu (dikey + yatay) + animasyon zaman çizelgesi
-   ═════════════════════════════════════════════════════════════════ */
-const OLCEK = {
-  dikey: { w: 1080, h: 1920 },
-  yatay: { w: 3840, h: 2160 },
-};
-
-// Format bazlı ölçek katsayıları (genişliğe göre)
-const OLCEK_TABLOSU = {
-  dikey: {
-    padX: 0.09, padY: 0.10,
-    besmeleAr: 0.045, besmeleTr: 0.016,
-    baslik: 0.022,
-    ayetAr: 0.045, ayetTr: 0.020,
-    kaynak: 0.014,
-    hadisMetin: 0.018,
-    amin: 0.030,
-    ayiriciBosluk: 0.045,
-    satirYogunluk: 0.055,
-  },
-  yatay: {
-    padX: 0.14, padY: 0.14,
-    besmeleAr: 0.026, besmeleTr: 0.010,
-    baslik: 0.014,
-    ayetAr: 0.030, ayetTr: 0.013,
-    kaynak: 0.009,
-    hadisMetin: 0.012,
-    amin: 0.020,
-    ayiriciBosluk: 0.028,
-    satirYogunluk: 0.036,
-  },
-};
-
-// Animasyon zaman çizelgesi (saniye)
-const ZAMAN = {
-  besmele: 0.3,
-  ayetBaslik: 1.5,
-  ayetAr: 2.5,
-  ayetTr: 4.5,
-  ayetKaynak: 6.0,
-  hadisBaslik: 7.5,
-  hadisMetin: 9.0,
-  hadisKaynak: 11.0,
-  duaBaslik: 12.5,
-  duaMetin: 14.0,
-  amin: 16.0,
-};
+/* BÖLÜM J7: YERLEŞİM VE VİDEO ÇİZİMİ */
+const ONIZ_K = 0.75;
 const GIRIS_SURE = 0.8;
-
+function boyutGetir(orient, k = 1) {
+  const [bw, bh] = orient === 'yatay' ? [1920, 1080] : [1080, 1920];
+  return { w: Math.round(bw * k), h: Math.round(bh * k) };
+}
+function zamanHesapla(toplamSure) {
+  const metinSuresi = Math.max(5, toplamSure * 0.55), adim = metinSuresi / 10;
+  return {
+    besmele: 0.2, ayetBaslik: 0.2 + adim, ayetAr: 0.2 + adim * 2, ayetTr: 0.2 + adim * 3, ayetKaynak: 0.2 + adim * 4,
+    hadisBaslik: 0.2 + adim * 5, hadisMetin: 0.2 + adim * 6, hadisKaynak: 0.2 + adim * 7,
+    duaBaslik: 0.2 + adim * 8, duaMetin: 0.2 + adim * 9, amin: 0.2 + adim * 10
+  };
+}
 function alfa(t, baslangic, sure = GIRIS_SURE) {
   if (t < baslangic) return 0;
   if (t >= baslangic + sure) return 1;
   return (t - baslangic) / sure;
 }
-
-function boyutGetir(orient) { return OLCEK[orient] || OLCEK.dikey; }
-
+async function fontlariYukle() {
+  try {
+    await Promise.all(['700 40px Amiri', '40px Amiri', '600 40px "Cormorant Garamond"', '700 40px "Cormorant Garamond"', 'italic 600 40px "Cormorant Garamond"']
+      .map(f => document.fonts.load(f, 'AaİıŞş بِسْمِ ٱللَّهِ')));
+    await document.fonts.ready;
+  } catch {}
+  duzenCache.key = null;
+}
+function sar(ctx, metin, maxGen) { // ölçüm ve çizim aynı satırları kullanır
+  const out = []; let satir = '';
+  for (const k of String(metin || '').split(/\s+/).filter(Boolean)) {
+    const test = satir ? satir + ' ' + k : k;
+    if (satir && ctx.measureText(test).width > maxGen) { out.push(satir); satir = k; } else satir = test;
+  }
+  if (satir) out.push(satir);
+  return out;
+}
+function bloklarHazirla(ctx, v, w, orient, O, sc) {
+  const px = (n) => Math.round(n * sc), bosluk = px(O.bosluk);
+  const maxG = w - w * (orient === 'dikey' ? 0.13 : 0.17) * 2;
+  const FA = '"Amiri", serif', FC = '"Cormorant Garamond", serif';
+  const L = [];
+  const M = (metin, font, renk, lh, alt, zaman, tur = 'metin') => {
+    if (!metin) return;
+    ctx.font = font;
+    const satirlar = sar(ctx, metin, maxG);
+    L.push({ tur, satirlar, font, renk, lh, yuk: satirlar.length * lh + alt, zaman });
+  };
+  const AY = (zaman) => L.push({ tur: 'ayirici', satirlar: [], lh: 0, yuk: bosluk, zaman });
+  const bas = (n) => `700 ${px(O.baslik)}px ${FC}`;
+  const gov = `600 ${px(O.govde)}px ${FC}`, kay = `600 ${px(O.kaynak)}px ${FC}`, arF = `${px(O.baslik * 1.3)}px ${FA}`;
+  const arLh = px(O.baslik * 1.5 * O.satir), govLh = px(O.govde * O.satir), kayLh = px(O.kaynak * 1.6), basLh = px(O.baslik * 1.5);
+  M(v.besmele?.arapca || 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', `700 ${px(O.baslik * 1.5)}px ${FA}`, R.murekkep, px(O.baslik * 1.5 * O.satir), px(O.govde * 0.1), 'besmele');
+  M(v.besmele?.turkce || 'Rahmân ve Rahîm olan Allah\'ın adıyla', `italic 600 ${px(O.govde * 0.8)}px ${FC}`, R.kirmizi, px(O.govde * 1.05), 0, 'besmele');
+  AY('besmele');
+  M(v.ayet?.baslik || 'Ayet', bas(), R.kirmizi, basLh, px(O.govde * 0.2), 'ayetBaslik', 'baslik');
+  M(v.ayet?.arapca, arF, R.murekkep, arLh, px(O.govde * 0.4), 'ayetAr');
+  M(v.ayet?.turkce && `“${v.ayet.turkce}”`, gov, R.murekkep, govLh, px(O.govde * 0.3), 'ayetTr');
+  M(v.ayet?.kaynak && `(${v.ayet.kaynak})`, kay, R.altinKoyu, kayLh, 0, 'ayetKaynak');
+  AY('ayetKaynak');
+  M(v.hadis?.baslik || 'Hadis', bas(), R.kirmizi, basLh, px(O.govde * 0.2), 'hadisBaslik', 'baslik');
+  M(v.hadis?.metin && `“${v.hadis.metin}”`, gov, R.murekkep, govLh, px(O.govde * 0.3), 'hadisMetin');
+  M(v.hadis?.kaynak && `(${v.hadis.kaynak})`, kay, R.altinKoyu, kayLh, 0, 'hadisKaynak');
+  AY('hadisKaynak');
+  M(v.dua?.baslik || 'Dua', bas(), R.kirmizi, basLh, px(O.govde * 0.2), 'duaBaslik', 'baslik');
+  M(v.dua?.metin, gov, R.murekkep, govLh, px(O.govde * 0.3), 'duaMetin');
+  M(v.dua?.amin || 'Âmin', `700 ${px(O.baslik * 1.5)}px ${FA}`, R.kirmizi, px(O.baslik * 1.9), 0, 'amin', 'amin');
+  return { L, toplam: L.reduce((a, b) => a + b.yuk, 0) };
+}
+const duzenCache = { key: null, v: null, val: null };
+function duzenHesapla(ctx, v, w, h, orient) {
+  const O = state.editor[orient] || state.editor.dikey;
+  const key = [w, h, orient, JSON.stringify(O)].join('|');
+  if (duzenCache.key === key && duzenCache.v === v) return duzenCache.val;
+  const olcek = orient === 'dikey' ? w / 1080 : w / 1920;
+  const ust = h * (orient === 'dikey' ? 0.135 : 0.2), alt = h * (orient === 'dikey' ? 0.8 : 0.9), bos = alt - ust; // Shorts arayüzü için alt boşluk
+  let s = 1, d = bloklarHazirla(ctx, v, w, orient, O, olcek);
+  for (let i = 0; i < 25 && d.toplam > bos && s > 0.3; i++) { s *= 0.95; d = bloklarHazirla(ctx, v, w, orient, O, olcek * s); } // sığmazsa otomatik küçült
+  let y = ust + Math.max(0, (bos - d.toplam) / 2);
+  for (const b of d.L) { b.y = y; y += b.yuk; }
+  const val = { L: d.L, baslikY: h * (orient === 'dikey' ? 0.085 : 0.115), kartusYuk: Math.round(O.baslik * olcek * 1.5), kartusFont: Math.round(O.baslik * olcek * 0.8) };
+  Object.assign(duzenCache, { key, v, val });
+  return val;
+}
 function onizlemeCiz(orient = state.aktifOrient, video = state.aktifVideo) {
   const canvas = document.querySelector('#canvas-onizleme');
   if (!canvas) return;
-  const { w, h } = boyutGetir(orient);
-  canvas.width = w;
-  canvas.height = h;
-  const ctx = canvas.getContext('2d');
-  ciz(ctx, w, h, video, orient, 30);
+  const { w, h } = boyutGetir(orient, ONIZ_K);
+  if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+  const toplamSure = Number(document.querySelector('#inp-sure')?.value || 35);
+  ciz(canvas.getContext('2d'), w, h, video, orient, toplamSure, toplamSure);
 }
-
-function ciz(ctx, w, h, v, orient, t = 30) {
-  const O = OLCEK_TABLOSU[orient] || OLCEK_TABLOSU.dikey;
-
-  // Arka plan fade-in
-  const bgAlfa = Math.min(1, t / 0.5);
-  ctx.save();
-  ctx.globalAlpha = bgAlfa;
-  const g = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, Math.max(w, h) * 0.7);
-  g.addColorStop(0, '#0f2238');
-  g.addColorStop(1, '#050e18');
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, w, h);
-  geometrikDesen(ctx, w, h);
-  altinCerceve(ctx, w, h);
-  tumKoseMotifleri(ctx, w, h);
-  ctx.restore();
-
+function ciz(ctx, w, h, v, orient, t = 30, toplamSure = 35) {
+  const Z = zamanHesapla(toplamSure), u = Math.min(w, h), ortaX = w / 2, bgA = Math.min(1, t / 0.5);
+  ctx.save(); ctx.globalAlpha = bgA; ctx.drawImage(arkaPlan(w, h), 0, 0); ctx.restore();
   if (!v) {
-    ctx.fillStyle = '#a89a7a';
-    ctx.font = `${Math.round(w * 0.03)}px serif`;
-    ctx.textAlign = 'center';
-    ctx.fillText('JSON yükleyin…', w/2, h/2);
-    return;
+    ctx.save(); ctx.fillStyle = R.murekkep; ctx.font = `600 ${Math.round(u * 0.04)}px "Cormorant Garamond", serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('JSON yükleyin…', ortaX, h / 2); ctx.restore(); return;
   }
-
-  const pad = w * O.padX;
-  const ortaX = w / 2;
-  let y = h * O.padY;
-  let a;
-
-  // BESMELE
-  a = alfa(t, ZAMAN.besmele);
-  if (a > 0) {
-    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
-    ctx.fillStyle = '#c9a227';
-    ctx.font = `bold ${Math.round(w * O.besmeleAr)}px "Amiri", serif`;
-    ctx.fillText(v.besmele?.arapca || 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', ortaX, y);
-    y += w * O.besmeleAr * 0.7;
-    ctx.fillStyle = '#a89a7a';
-    ctx.font = `${Math.round(w * O.besmeleTr)}px "Cormorant Garamond", serif`;
-    ctx.fillText(v.besmele?.turkce || 'Rahmân ve Rahîm olan Allah\'ın adıyla', ortaX, y);
-    y += w * O.besmeleTr * 1.5;
-    ctx.restore();
-  } else { y += w * O.besmeleAr * 0.7 + w * O.besmeleTr * 1.5; }
-
-  // AYIRICI 1
-  a = alfa(t, ZAMAN.besmele + 0.5);
-  if (a > 0) { ctx.save(); ctx.globalAlpha = a; ayirici(ctx, pad, y, w - pad*2); ctx.restore(); }
-  y += w * O.ayiriciBosluk;
-
-  // AYET BAŞLIK
-  a = alfa(t, ZAMAN.ayetBaslik);
-  if (a > 0) {
-    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
-    ctx.fillStyle = '#c9a227';
-    ctx.font = `bold ${Math.round(w * O.baslik)}px "Cormorant Garamond", serif`;
-    ctx.fillText(v.ayet?.baslik || 'Ayet', ortaX, y);
-    ctx.restore();
-  }
-  y += w * O.baslik * 1.5;
-
-  // ARAPÇA AYET
-  a = alfa(t, ZAMAN.ayetAr);
-  if (a > 0) {
-    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
-    ctx.fillStyle = '#f5e6c8';
-    ctx.font = `${Math.round(w * O.ayetAr)}px "Amiri", serif`;
-    satirSar(ctx, v.ayet?.arapca || '', ortaX, y, w - pad*2, w * O.satirYogunluk);
-    ctx.restore();
-  }
-  y += satirSayisi(ctx, v.ayet?.arapca || '', w - pad*2, w * O.satirYogunluk) * w * O.satirYogunluk + w * O.satirYogunluk * 0.3;
-
-  // TÜRKÇE MEAL
-  a = alfa(t, ZAMAN.ayetTr);
-  if (a > 0) {
-    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
-    ctx.fillStyle = '#e8dcc0';
-    ctx.font = `${Math.round(w * O.ayetTr)}px "Cormorant Garamond", serif`;
-    satirSar(ctx, v.ayet?.turkce || '', ortaX, y, w - pad*2, w * O.ayetTr * 1.5);
-    ctx.restore();
-  }
-  y += satirSayisi(ctx, v.ayet?.turkce || '', w - pad*2, w * O.ayetTr * 1.5) * w * O.ayetTr * 1.5 + w * O.ayetTr * 0.5;
-
-  // AYET KAYNAK
-  a = alfa(t, ZAMAN.ayetKaynak);
-  if (a > 0) {
-    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
-    ctx.fillStyle = '#a89a7a';
-    ctx.font = `${Math.round(w * O.kaynak)}px "Cormorant Garamond", serif`;
-    ctx.fillText('— ' + (v.ayet?.kaynak || ''), ortaX, y);
-    ctx.restore();
-  }
-  y += w * O.kaynak * 2;
-
-  // AYIRICI 2
-  a = alfa(t, ZAMAN.hadisBaslik - 0.3);
-  if (a > 0) { ctx.save(); ctx.globalAlpha = a; ayirici(ctx, pad, y, w - pad*2); ctx.restore(); }
-  y += w * O.ayiriciBosluk;
-
-  // HADİS BAŞLIK
-  a = alfa(t, ZAMAN.hadisBaslik);
-  if (a > 0) {
-    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
-    ctx.fillStyle = '#c9a227';
-    ctx.font = `bold ${Math.round(w * O.baslik * 0.9)}px "Cormorant Garamond", serif`;
-    ctx.fillText(v.hadis?.baslik || 'Hadis', ortaX, y);
-    ctx.restore();
-  }
-  y += w * O.baslik * 1.4;
-
-  // HADİS METİN
-  a = alfa(t, ZAMAN.hadisMetin);
-  if (a > 0) {
-    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
-    ctx.fillStyle = '#e8dcc0';
-    ctx.font = `${Math.round(w * O.hadisMetin)}px "Cormorant Garamond", serif`;
-    satirSar(ctx, v.hadis?.metin || '', ortaX, y, w - pad*2, w * O.hadisMetin * 1.5);
-    ctx.restore();
-  }
-  y += satirSayisi(ctx, v.hadis?.metin || '', w - pad*2, w * O.hadisMetin * 1.5) * w * O.hadisMetin * 1.5 + w * O.hadisMetin * 0.4;
-
-  // HADİS KAYNAK
-  a = alfa(t, ZAMAN.hadisKaynak);
-  if (a > 0) {
-    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
-    ctx.fillStyle = '#a89a7a';
-    ctx.font = `${Math.round(w * O.kaynak)}px "Cormorant Garamond", serif`;
-    ctx.fillText('— ' + (v.hadis?.kaynak || ''), ortaX, y);
-    ctx.restore();
-  }
-  y += w * O.kaynak * 2;
-
-  // AYIRICI 3
-  a = alfa(t, ZAMAN.duaBaslik - 0.3);
-  if (a > 0) { ctx.save(); ctx.globalAlpha = a; ayirici(ctx, pad, y, w - pad*2); ctx.restore(); }
-  y += w * O.ayiriciBosluk;
-
-  // DUA BAŞLIK
-  a = alfa(t, ZAMAN.duaBaslik);
-  if (a > 0) {
-    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
-    ctx.fillStyle = '#c9a227';
-    ctx.font = `bold ${Math.round(w * O.baslik * 0.9)}px "Cormorant Garamond", serif`;
-    ctx.fillText(v.dua?.baslik || 'Dua', ortaX, y);
-    ctx.restore();
-  }
-  y += w * O.baslik * 1.4;
-
-  // DUA METİN
-  a = alfa(t, ZAMAN.duaMetin);
-  if (a > 0) {
-    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
-    ctx.fillStyle = '#e8dcc0';
-    ctx.font = `${Math.round(w * O.hadisMetin)}px "Cormorant Garamond", serif`;
-    satirSar(ctx, v.dua?.metin || '', ortaX, y, w - pad*2, w * O.hadisMetin * 1.5);
-    ctx.restore();
-  }
-  y += satirSayisi(ctx, v.dua?.metin || '', w - pad*2, w * O.hadisMetin * 1.5) * w * O.hadisMetin * 1.5 + w * O.amin * 1.2;
-
-  // ÂMÎN — parlama animasyonu
-  a = alfa(t, ZAMAN.amin, 1.0);
-  if (a > 0) {
-    ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center';
-    const parlama = t > ZAMAN.amin ? 0.75 + 0.25 * Math.sin((t - ZAMAN.amin) * 2.5) : 1;
-    ctx.fillStyle = `rgba(201, 162, 39, ${parlama})`;
-    ctx.shadowColor = `rgba(224, 196, 104, ${parlama})`;
-    ctx.shadowBlur = w * 0.02 * parlama;
-    ctx.font = `${Math.round(w * O.amin)}px "Amiri", serif`;
-    ctx.fillText(v.dua?.amin || 'آمِين', ortaX, y);
+  const D = duzenHesapla(ctx, v, w, h, orient);
+  ctx.save(); ctx.globalAlpha = bgA;
+  kartus(ctx, ortaX, D.baslikY, D.kartusYuk, v.sure || '', `700 ${D.kartusFont}px "Cormorant Garamond", serif`);
+  ctx.restore();
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  for (const b of D.L) {
+    const a = alfa(t, Z[b.zaman], b.tur === 'amin' ? 1 : GIRIS_SURE);
+    if (a <= 0) continue;
+    ctx.save(); ctx.globalAlpha = a;
+    if (b.tur === 'ayirici') ayirici(ctx, ortaX, b.y + b.yuk / 2, w * 0.3, Math.min(u, b.yuk * 20));
+    else {
+      ctx.font = b.font; ctx.fillStyle = b.renk;
+      if (b.tur === 'amin') { const p = t > Z.amin ? 0.75 + 0.25 * Math.sin((t - Z.amin) * 2.5) : 1; ctx.shadowColor = `rgba(176,138,46,${p})`; ctx.shadowBlur = u * 0.03 * p; }
+      b.satirlar.forEach((s, i) => ctx.fillText(s, ortaX, b.y + i * b.lh + b.lh / 2));
+      if (b.tur === 'baslik') {
+        const tw = ctx.measureText(b.satirlar[0]).width, yy = b.y + b.lh / 2;
+        ctx.shadowBlur = 0; ctx.strokeStyle = R.altin; ctx.fillStyle = R.altin; ctx.lineWidth = Math.max(1, u * 0.002);
+        for (const sg of [-1, 1]) {
+          const xa = ortaX + sg * (tw / 2 + u * 0.02), xb = ortaX + sg * (tw / 2 + u * 0.1);
+          ctx.beginPath(); ctx.moveTo(xa, yy); ctx.lineTo(xb, yy); ctx.stroke(); yildiz(ctx, xb, yy, u * 0.009, 4, 0.45); ctx.fill();
+        }
+      }
+    }
     ctx.restore();
   }
 }
 
-function satirSar(ctx, metin, x, y, maxGen, satirY) {
-  const kelimeler = metin.split(' ');
-  let satir = '';
-  let yy = y;
-  for (const k of kelimeler) {
-    const test = satir ? satir + ' ' + k : k;
-    if (ctx.measureText(test).width > maxGen && satir) {
-      ctx.fillText(satir, x, yy);
-      satir = k;
-      yy += satirY;
-    } else satir = test;
-  }
-  if (satir) ctx.fillText(satir, x, yy);
-}
-
-function satirSayisi(ctx, metin, maxGen, satirY) {
-  const kelimeler = metin.split(' ');
-  let satir = '', sayi = 1;
-  for (const k of kelimeler) {
-    const test = satir ? satir + ' ' + k : k;
-    if (ctx.measureText(test).width > maxGen && satir) { sayi++; satir = k; }
-    else satir = test;
-  }
-  return sayi;
-}
-
-
-/* ═════════════════════════════════════════════════════════════════
-   BÖLÜM J8: 4K MP4 KODLAYICI (WebCodecs + mp4-muxer)
-   ═════════════════════════════════════════════════════════════════ */
+/* BÖLÜM J8: MP4 KODLAYICI */
 let Muxer, ArrayBufferTarget;
 async function muxerYukle() {
   if (Muxer) return;
-  try {
-    const mod = await import('./mp4-muxer.js');
-    Muxer = mod.Muxer; ArrayBufferTarget = mod.ArrayBufferTarget;
-  } catch (e) {
-    console.warn('Yerel mp4-muxer yok, CDN kullanılıyor');
-    const mod = await import('https://cdn.jsdelivr.net/npm/mp4-muxer@5/+esm');
-    Muxer = mod.Muxer; ArrayBufferTarget = mod.ArrayBufferTarget;
-  }
+  try { const mod = await import('./mp4-muxer.js'); Muxer = mod.Muxer; ArrayBufferTarget = mod.ArrayBufferTarget; }
+  catch { const mod = await import('https://cdn.jsdelivr.net/npm/mp4-muxer@5.1.5/+esm'); Muxer = mod.Muxer; ArrayBufferTarget = mod.ArrayBufferTarget; }
 }
 
 async function videoUret(orient = state.aktifOrient) {
-  await muxerYukle();
   const v = state.aktifVideo;
   if (!v) return alert('Önce bir ayet yükleyin.');
-
-  const { w, h } = boyutGetir(orient);
-  const fps = 30;
-  const sure = Number(document.querySelector('#inp-sure')?.value || state.json?.ayarlar?.sureSaniye || 35);
-  const bitHizi = Number(document.querySelector('#inp-bitrate').value || 40) * 1_000_000;
-  const codec = document.querySelector('#sel-codec').value;
-
-  const canvas = new OffscreenCanvas(w, h);
-  const ctx = canvas.getContext('2d');
-
-  const muxer = new Muxer({
-    target: new ArrayBufferTarget(),
-    video: { codec: codec.startsWith('hvc1') ? 'hevc' : 'avc', width: w, height: h, frameRate: fps },
-    audio: state.muzik ? { codec: 'aac', numberOfChannels: 2, sampleRate: 48000 } : undefined,
-    fastStart: 'in-memory',
-  });
-
-  const vEnc = new VideoEncoder({
-    output: (chunk, meta) => muxer.addVideoChunk(chunk, meta),
-    error: (e) => console.error('VideoEncoder', e),
-  });
-  vEnc.configure({
-    codec, width: w, height: h, bitrate: bitHizi, framerate: fps,
-    latencyMode: 'quality', hardwareAcceleration: 'prefer-hardware',
-  });
-
-  let aEnc = null;
-  if (state.muzik) aEnc = await sesKodlayiciHazirla(state.muzik, muxer, sure);
-
-  const toplamKare = sure * fps;
-  const overlay = document.querySelector('#overlay');
-  const mesaj = document.querySelector('#overlay-mesaj');
-  const progress = document.querySelector('#overlay-progress');
-  overlay.classList.remove('hidden');
-  mesaj.textContent = 'Kareler kodlanıyor…';
-
-  for (let i = 0; i < toplamKare; i++) {
-    const t = i / fps;
-    ctx.clearRect(0, 0, w, h);
-    ciz(ctx, w, h, v, orient, t);
-    const frame = new VideoFrame(canvas, { timestamp: Math.round((i / fps) * 1_000_000) });
-    vEnc.encode(frame, { keyFrame: i % (fps * 2) === 0 });
-    frame.close();
-    if (vEnc.encodeQueueSize > 8) await new Promise(r => setTimeout(r, 10));
-    if (i % 10 === 0) {
-      progress.style.setProperty('--ilerleme', `${(i / toplamKare) * 100}%`);
-      await new Promise(r => setTimeout(r, 0));
+  if (typeof VideoEncoder === 'undefined') return alert('Bu tarayıcı video kodlamayı (WebCodecs) desteklemiyor. Güncel Chrome veya Edge kullanın.');
+  const overlay = document.querySelector('#overlay'), mesaj = document.querySelector('#overlay-mesaj'), progress = document.querySelector('#overlay-progress');
+  overlay.classList.remove('hidden'); mesaj.textContent = 'Hazırlanıyor…'; progress.style.setProperty('--ilerleme', '0%');
+  let vEnc = null, aEnc = null;
+  try {
+    await muxerYukle(); await fontlariYukle();
+    const { w, h } = boyutGetir(orient, state.kalite === '4k' ? 2 : 1), fps = 30;
+    const sure = Number(document.querySelector('#inp-sure')?.value || 35);
+    const bitHizi = Number(document.querySelector('#inp-bitrate').value || 40) * 1_000_000;
+    let codec = document.querySelector('#sel-codec').value;
+    const cfg = { codec, width: w, height: h, bitrate: bitHizi, framerate: fps, latencyMode: 'quality', hardwareAcceleration: 'prefer-hardware' };
+    let sup = await VideoEncoder.isConfigSupported(cfg);
+    if (!sup.supported && codec.startsWith('hvc1')) {
+      cfg.codec = codec = 'avc1.640033'; sup = await VideoEncoder.isConfigSupported(cfg);
+      alert('H.265 bu cihazda desteklenmiyor, H.264 kullanılacak.');
     }
+    if (!sup.supported) throw new Error(`Bu cihaz ${w}×${h} çözünürlükte kodlama yapamıyor. "Full HD" seçeneğini deneyin.`);
+
+    let sesVar = !!(state.muzik && document.querySelector('#chk-muzik').checked);
+    if (sesVar) {
+      const as = typeof AudioEncoder !== 'undefined' && (await AudioEncoder.isConfigSupported({ codec: 'mp4a.40.2', sampleRate: 48000, numberOfChannels: 2, bitrate: 160000 })).supported;
+      if (!as) { sesVar = false; alert('Bu tarayıcı AAC ses kodlamayı desteklemiyor; video müziksiz üretilecek.'); }
+    }
+
+    const canvas = mk(w, h), ctx = canvas.getContext('2d');
+    const muxer = new Muxer({
+      target: new ArrayBufferTarget(),
+      video: { codec: codec.startsWith('hvc1') ? 'hevc' : 'avc', width: w, height: h, frameRate: fps },
+      audio: sesVar ? { codec: 'aac', numberOfChannels: 2, sampleRate: 48000 } : undefined,
+      fastStart: 'in-memory',
+    });
+    let hata = null;
+    vEnc = new VideoEncoder({ output: (c, m) => muxer.addVideoChunk(c, m), error: (e) => { hata = e; } });
+    vEnc.configure(cfg);
+    if (sesVar) { mesaj.textContent = 'Ses hazırlanıyor…'; aEnc = await sesKodlayiciHazirla(state.muzik, muxer, sure, (e) => { hata = e; }); }
+
+    mesaj.textContent = 'Kareler kodlanıyor…';
+    const toplamKare = sure * fps;
+    for (let i = 0; i < toplamKare; i++) {
+      if (hata) throw hata;
+      ctx.fillStyle = '#000'; ctx.fillRect(0, 0, w, h);
+      ciz(ctx, w, h, v, orient, i / fps, sure);
+      const frame = new VideoFrame(canvas, { timestamp: Math.round(i / fps * 1_000_000) });
+      vEnc.encode(frame, { keyFrame: i % (fps * 2) === 0 }); frame.close();
+      while (vEnc.encodeQueueSize > 8) await new Promise(r => setTimeout(r, 10));
+      if (i % 10 === 0) { progress.style.setProperty('--ilerleme', `${i / toplamKare * 100}%`); await new Promise(r => setTimeout(r, 0)); }
+    }
+    mesaj.textContent = 'Dosya hazırlanıyor…';
+    await vEnc.flush(); if (aEnc) await aEnc.flush();
+    if (hata) throw hata;
+    muxer.finalize();
+    indir(new Blob([muxer.target.buffer], { type: 'video/mp4' }), `ayet-${v.sure || 'video'}-${orient}.mp4`);
+    const tani = ayetTani(v.sure);
+    if (tani) { ayetIsaretle(tani.sureNo, tani.ayetNo); document.dispatchEvent(new CustomEvent('takip-guncellendi')); }
+  } catch (e) {
+    console.error(e); alert('Video üretilemedi: ' + (e?.message || e));
+  } finally {
+    overlay.classList.add('hidden');
+    for (const x of [vEnc, aEnc]) { try { if (x && x.state !== 'closed') x.close(); } catch {} }
   }
-
-  await vEnc.flush();
-  if (aEnc) await aEnc.flush();
-  muxer.finalize();
-
-  const blob = new Blob([muxer.target.buffer], { type: 'video/mp4' });
-  indir(blob, `ayet-${v.sure || 'video'}-${orient}.mp4`);
-
-  overlay.classList.add('hidden');
-  vEnc.close();
-  if (aEnc) aEnc.close();
 }
 
-async function sesKodlayiciHazirla(file, muxer, sure) {
+async function sesKodlayiciHazirla(file, muxer, sure, onErr) {
   const arrayBuf = await file.arrayBuffer();
   const audioCtx = new OfflineAudioContext(2, 48000 * sure, 48000);
   const audioBuf = await audioCtx.decodeAudioData(arrayBuf);
-  const src = audioCtx.createBufferSource();
-  src.buffer = audioBuf;
-  src.loop = true;
-  const gain = audioCtx.createGain();
-  gain.gain.value = Number(document.querySelector('#rng-ses').value);
-  src.connect(gain).connect(audioCtx.destination);
-  src.start(0);
+  const src = audioCtx.createBufferSource(); src.buffer = audioBuf; src.loop = true;
+  const vol = Number(document.querySelector('#rng-ses').value), gain = audioCtx.createGain();
+  gain.gain.setValueAtTime(vol, 0); gain.gain.setValueAtTime(vol, Math.max(0, sure - 1.5)); gain.gain.linearRampToValueAtTime(0, sure); // son 1,5 sn yumuşak bitiş
+  src.connect(gain).connect(audioCtx.destination); src.start(0);
   const rendered = await audioCtx.startRendering();
-
-  const aEnc = new AudioEncoder({
-    output: (chunk, meta) => muxer.addAudioChunk(chunk, meta),
-    error: (e) => console.error('AudioEncoder', e),
-  });
+  const aEnc = new AudioEncoder({ output: (c, m) => muxer.addAudioChunk(c, m), error: onErr });
   aEnc.configure({ codec: 'mp4a.40.2', sampleRate: 48000, numberOfChannels: 2, bitrate: 160000 });
-
-  const ch0 = rendered.getChannelData(0);
-  const ch1 = rendered.getChannelData(1);
-  const kare = 1024;
+  const ch0 = rendered.getChannelData(0), ch1 = rendered.getChannelData(1), kare = 1024;
   for (let i = 0; i < ch0.length; i += kare) {
-    const adet = Math.min(kare, ch0.length - i);
-    const data = new Float32Array(adet * 2);
-    for (let j = 0; j < adet; j++) { data[j*2] = ch0[i+j]; data[j*2+1] = ch1[i+j]; }
-    const audioData = new AudioData({
-      format: 'f32-planar', sampleRate: 48000,
-      numberOfFrames: adet, numberOfChannels: 2,
-      timestamp: Math.round((i / 48000) * 1_000_000), data,
-    });
-    aEnc.encode(audioData);
-    audioData.close();
+    const adet = Math.min(kare, ch0.length - i), data = new Float32Array(adet * 2);
+    data.set(ch0.subarray(i, i + adet), 0); data.set(ch1.subarray(i, i + adet), adet); // f32-planar: önce sol, sonra sağ kanal
+    const ad = new AudioData({ format: 'f32-planar', sampleRate: 48000, numberOfFrames: adet, numberOfChannels: 2, timestamp: Math.round(i / 48000 * 1_000_000), data });
+    aEnc.encode(ad); ad.close();
+    if (aEnc.encodeQueueSize > 64) await new Promise(r => setTimeout(r, 0));
   }
   return aEnc;
 }
 
 function indir(blob, ad) {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+  const url = URL.createObjectURL(blob), a = document.createElement('a');
   a.href = url; a.download = ad; a.click();
-  URL.revokeObjectURL(url);
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
 }
 
-
-/* ═════════════════════════════════════════════════════════════════
-   BÖLÜM J9: UI BAĞLAYICI
-   DOM olaylarını ve seçimleri bağlar
-   ═════════════════════════════════════════════════════════════════ */
+/* BÖLÜM J9: UI BAĞLAYICI */
 function bindUI() {
+  takipYukle(); // seçimler yüklenmeden önce kayıtlı takip okunmalı
+  // Dosyadan Yükle
   document.querySelector('#btn-json-yukle').onclick = async () => {
     const data = await jsonDosyasiSec();
-    if (data) {
-      state.aktifVideo = data.videolar?.[0] || null;
-      if (data.ayarlar?.sureSaniye) {
-        const inp = document.querySelector('#inp-sure');
-        if (inp) inp.value = data.ayarlar.sureSaniye;
+    if (data) jsonVerisiniUygula(data);
+  };
+
+  // YENİ: Modal Açma / Kapatma
+  const modal = document.querySelector('#modal-yapistir');
+  const txtJson = document.querySelector('#txt-json');
+  
+  document.querySelector('#btn-json-yapistir').onclick = () => {
+    modal.classList.remove('hidden');
+    txtJson.value = ''; // Temizle
+    txtJson.focus();
+  };
+
+  document.querySelector('#btn-yapistir-iptal').onclick = () => {
+    modal.classList.add('hidden');
+  };
+
+  document.querySelector('#btn-yapistir-yukle').onclick = () => {
+    const metin = txtJson.value.trim();
+    if (!metin) return alert('Lütfen JSON metnini yapıştırın.');
+    try {
+      const data = JSON.parse(metin);
+      if (jsonVerisiniUygula(data)) {
+        modal.classList.add('hidden'); // Başarılıysa kapat
       }
-      onizlemeCiz();
-      takipGuncelle();
+    } catch (e) {
+      alert('Geçersiz JSON formatı. Lütfen kontrol edin.\nHata: ' + e.message);
     }
   };
+
   document.querySelector('#btn-json-kaydet').onclick = jsonIndir;
+  
+  document.querySelector('#btn-png-indir').onclick = async () => {
+    if (!state.aktifVideo) return alert('Önce JSON yükleyin.');
+    await fontlariYukle();
+    const { w, h } = boyutGetir(state.aktifOrient, state.kalite === '4k' ? 2 : 1);
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    const sure = Number(document.querySelector('#inp-sure').value || 35);
+    ciz(c.getContext('2d'), w, h, state.aktifVideo, state.aktifOrient, sure, sure);
+    c.toBlob((b) => indir(b, `onizleme-${state.aktifVideo.sure || 'ayet'}-${state.aktifOrient}.png`), 'image/png');
+  };
+
+  let onizlemeTimer = null;
+  document.querySelector('#btn-onizle').onclick = () => {
+    if (onizlemeTimer) { clearInterval(onizlemeTimer); onizlemeTimer = null; document.querySelector('#btn-onizle').textContent = '▶️ Oynat'; return; }
+    if (!state.aktifVideo) return alert('Önce JSON yükleyin.');
+    
+    const btn = document.querySelector('#btn-onizle');
+    btn.textContent = '⏹️ Durdur';
+    const canvas = document.querySelector('#canvas-onizleme');
+    const ctx = canvas.getContext('2d');
+    const { w, h } = boyutGetir(state.aktifOrient, ONIZ_K);
+    const toplamSure = Number(document.querySelector('#inp-sure')?.value || 35);
+    
+    canvas.width = w; canvas.height = h;
+
+    let baslangic = performance.now();
+    onizlemeTimer = setInterval(() => {
+      let gecen = (performance.now() - baslangic) / 1000;
+      if (gecen > toplamSure) gecen = toplamSure;
+      
+      ciz(ctx, w, h, state.aktifVideo, state.aktifOrient, gecen, toplamSure);
+      
+      if (gecen >= toplamSure) {
+        clearInterval(onizlemeTimer); onizlemeTimer = null; btn.textContent = '▶️ Oynat';
+      }
+    }, 1000 / 30);
+  };
+
   document.querySelector('#btn-video-uret').onclick = () => videoUret();
 
   document.querySelectorAll('.preview-tabs button').forEach(b => {
     b.onclick = () => {
+      if (onizlemeTimer) { clearInterval(onizlemeTimer); onizlemeTimer = null; document.querySelector('#btn-onizle').textContent = '▶️ Oynat'; }
       document.querySelectorAll('.preview-tabs button').forEach(x => x.classList.remove('active'));
-      b.classList.add('active');
-      state.aktifOrient = b.dataset.orient;
-      onizlemeCiz();
+      b.classList.add('active'); state.aktifOrient = b.dataset.orient; onizlemeCiz();
     };
   });
 
-  document.querySelectorAll('[data-copy]').forEach(b => {
-    b.onclick = () => kopyala(b.dataset.copy);
-  });
-
-  document.querySelector('#inp-muzik').onchange = (e) => {
-    state.muzik = e.target.files[0] || null;
-  };
+  document.querySelectorAll('[data-copy]').forEach(b => { b.onclick = () => kopyala(b.dataset.copy); });
+  document.querySelector('#inp-muzik').onchange = (e) => { state.muzik = e.target.files[0] || null; if (state.muzik) document.querySelector('#chk-muzik').checked = true; };
 
   document.querySelectorAll('#tabbar button').forEach(b => {
     b.onclick = () => {
-      document.querySelectorAll('#tabbar button').forEach(x => x.classList.remove('active'));
-      b.classList.add('active');
+      document.querySelectorAll('#tabbar button').forEach(x => x.classList.remove('active')); b.classList.add('active');
       document.querySelectorAll('#app > aside, #app > section').forEach(p => p.classList.remove('tab-aktif'));
       document.querySelector('#' + b.dataset.tab).classList.add('tab-aktif');
     };
   });
 
-  const selSure = document.querySelector('#sel-sure');
-  const selAyet = document.querySelector('#sel-ayet');
+  const selSure = document.querySelector('#sel-sure'), selAyet = document.querySelector('#sel-ayet');
   sureSecenekleriniDoldur(selSure);
-
   const sirada = siradakiGetir();
-  selSure.value = String(sirada.sureNo);
-  ayetSecenekleriniDoldur(selAyet, sirada.sureNo);
-  selAyet.value = String(sirada.ayetNo);
+  selSure.value = String(sirada.sureNo); ayetSecenekleriniDoldur(selAyet, sirada.sureNo); selAyet.value = String(sirada.ayetNo);
 
-  selSure.onchange = () => {
-    ayetSecenekleriniDoldur(selAyet, Number(selSure.value));
-    selAyet.value = '1';
-  };
-
+  selSure.onchange = () => { ayetSecenekleriniDoldur(selAyet, Number(selSure.value)); selAyet.value = '1'; };
   document.querySelector('#btn-isaretle').onclick = isaretleFromSelect;
+  document.querySelector('#btn-geri-al').onclick = () => { ayetGeriAl(); document.dispatchEvent(new CustomEvent('takip-guncellendi')); };
 
   document.querySelector('#takip-siradaki').addEventListener('click', (e) => {
     if (e.target.tagName === 'BUTTON') {
       const s = siradakiGetir();
-      selSure.value = String(s.sureNo);
-      ayetSecenekleriniDoldur(selAyet, s.sureNo);
-      selAyet.value = String(s.ayetNo);
+      selSure.value = String(s.sureNo); ayetSecenekleriniDoldur(selAyet, s.sureNo); selAyet.value = String(s.ayetNo);
       aiPromptKopyala(s);
     }
   });
 
-  document.addEventListener('takip-guncellendi', takipGuncelle);
+  document.querySelector('#inp-sure').addEventListener('change', () => {
+    if (!onizlemeTimer) onizlemeCiz();
+  });
 
-  takipYukle();
-  takipGuncelle();
-  onizlemeCiz();
+  // Kalite seçimi (mobilde otomatik Full HD)
+  const selK = document.querySelector('#sel-kalite'), inpB = document.querySelector('#inp-bitrate');
+  const kaliteUygula = (k) => {
+    state.kalite = k; inpB.value = k === '4k' ? 40 : 14;
+    document.querySelector('#badge-kalite').textContent = k === '4k' ? '4K MP4' : '1080p MP4';
+  };
+  selK.onchange = () => kaliteUygula(selK.value);
+  selK.value = (matchMedia('(pointer:coarse)').matches || innerWidth < 900) ? '1080' : '4k';
+  kaliteUygula(selK.value);
+
+  // EDİTÖR BAĞLANTILARI
+  function editorGuncelle() {
+    document.querySelector('#lbl-format').textContent = state.aktifOrient === 'dikey' ? 'Dikey (9:16)' : 'Yatay (16:9)';
+    const ed = state.editor[state.aktifOrient];
+    ['baslik', 'govde', 'kaynak', 'satir', 'bosluk'].forEach(k => {
+      document.querySelector(`#edt-${k}`).value = ed[k];
+      document.querySelector(`#val-${k}`).textContent = ed[k] + (k === 'satir' ? '' : 'px');
+    });
+  }
+
+  ['baslik', 'govde', 'kaynak', 'satir', 'bosluk'].forEach(k => {
+    document.querySelector(`#edt-${k}`).addEventListener('input', (e) => {
+      const val = parseFloat(e.target.value);
+      state.editor[state.aktifOrient][k] = val;
+      document.querySelector(`#val-${k}`).textContent = val + (k === 'satir' ? '' : 'px');
+      if (onizlemeTimer) { clearInterval(onizlemeTimer); onizlemeTimer = null; document.querySelector('#btn-onizle').textContent = '▶️ Oynat'; }
+      onizlemeCiz();
+    });
+  });
+
+  // Formata tıklanınca editörü güncelle
+  document.querySelectorAll('.preview-tabs button').forEach(b => {
+    b.addEventListener('click', () => { setTimeout(editorGuncelle, 10); });
+  });
+  editorGuncelle(); // Başlangıçta yükle
+
+  document.addEventListener('takip-guncellendi', takipGuncelle);
+  takipGuncelle(); onizlemeCiz();
+  fontlariYukle().then(() => onizlemeCiz());
+  try { const kayit = localStorage.getItem(STORAGE_KEY); if (kayit) jsonVerisiniUygula(JSON.parse(kayit)); } catch {}
 }
 
 function takipGuncelle() {
-  const son = sonIslenenGetir();
-  const sirada = siradakiGetir();
-  const elSon = document.querySelector('#takip-son');
-  const elSir = document.querySelector('#takip-siradaki');
+  const son = sonIslenenGetir(), sirada = siradakiGetir();
+  const elSon = document.querySelector('#takip-son'), elSir = document.querySelector('#takip-siradaki');
   if (elSon) elSon.innerHTML = `<b>Son işlenen:</b> ${son || '—'}`;
-  if (elSir) elSir.innerHTML =
-    `<b>🎯 Sıradaki:</b> ${sirada.etiket}<br><button class="primary" style="margin-top:8px">▶️ Bu Ayet İçin AI Prompt</button>`;
+  if (elSir) elSir.innerHTML = `<b>🎯 Sıradaki:</b> ${sirada.etiket}<br><button class="primary" style="margin-top:8px">▶️ Bu Ayet İçin AI Prompt</button>`;
 }
 
 async function aiPromptKopyala(s) {
-  const prompt = `Sen bir İslami içerik üreticisisin. Aşağıdaki ayet için JSON şablonunu doldur. Sadece JSON döndür.
-
-SIRADAKİ AYET: ${s.sureAd} ${s.ayetNo}
-ÖNCEKİ: ${sonIslenenGetir() || 'yok'}
-
-KURALLAR:
-1. BAŞLIK: 60-70 karakter, duygu kancası + konu + "| Sure AyetNo" + 1 emoji.
-2. AÇIKLAMA 5 bölüm: kanca (ilk 100 karakter), ayet+hadis+dua tam metin, bağlam (iniş yeri+sebebi+fazileti+hadis ref), kaynaklar, CTA.
-3. HASHTAG: 3-5 tane (geniş+konu+format+marka). Başlıkta # YOK.
-4. ETİKETLER: 10-15, virgülle, geniş + uzun kuyruk.
-5. BAĞLAM: gerçek esbâb-ı nüzûl, emin değilsen "rivayet edilir" de.
-
-Format:
-{
-  "sure": "${s.sureAd} ${s.ayetNo}",
-  "besmele": { "arapca": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", "turkce": "Rahmân ve Rahîm olan Allah'ın adıyla" },
-  "ayet": { "baslik": "...", "arapca": "...", "turkce": "...", "kaynak": "..." },
-  "hadis": { "baslik": "...", "metin": "...", "kaynak": "..." },
-  "dua": { "baslik": "...", "metin": "...", "kaynak": "...", "amin": "آمِين" },
-  "baglam": { "inisYeri": "Mekke|Medine", "inisSebebi": "...", "fazileti": "...", "hadisReferans": "..." },
-  "kaynaklar": { "meal": "Diyanet İşleri Başkanlığı", "hadis": "...", "ses": "Telifsiz", "gorsel": "Özgün tasarım" },
-  "youtube": { "baslik": "...", "aciklama": "...", "hashtagler": ["..."], "etiketler": ["..."] }
-}`;
-  try {
-    await navigator.clipboard.writeText(prompt);
-    alert('✓ AI prompt kopyalandı.');
-  } catch { alert('Kopyalanamadı.'); }
+  const prompt = `Sen bir İslami içerik üreticisisin. Aşağıdaki ayet için JSON şablonunu doldur. Sadece JSON döndür.\n\nSIRADAKİ AYET: ${s.sureAd} ${s.ayetNo}\nÖNCEKİ: ${sonIslenenGetir() || 'yok'}\n\nKURALLAR:\n1. BAŞLIK: 60-70 karakter, duygu kancası + konu + "| Sure AyetNo" + 1 emoji.\n2. AÇIKLAMA 5 bölüm: kanca (ilk 100 karakter), ayet+hadis+dua tam metin, bağlam (iniş yeri+sebebi+fazileti+hadis ref), kaynaklar, CTA.\n3. HASHTAG: 3-5 tane (geniş+konu+format+marka). Başlıkta # YOK.\n4. ETİKETLER: 10-15, virgülle, geniş + uzun kuyruk.\n5. BAĞLAM: gerçek esbâb-ı nüzûl, emin değilsen "rivayet edilir" de.\n\nFormat:\n{\n  "sure": "${s.sureAd} ${s.ayetNo}",\n  "besmele": { "arapca": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", "turkce": "Rahmân ve Rahîm olan Allah'ın adıyla" },\n  "ayet": { "baslik": "...", "arapca": "...", "turkce": "...", "kaynak": "..." },\n  "hadis": { "baslik": "...", "metin": "...", "kaynak": "..." },\n  "dua": { "baslik": "...", "metin": "...", "kaynak": "...", "amin": "آمِين" },\n  "baglam": { "inisYeri": "Mekke|Medine", "inisSebebi": "...", "fazileti": "...", "hadisReferans": "..." },\n  "kaynaklar": { "meal": "Diyanet İşleri Başkanlığı", "hadis": "...", "ses": "Telifsiz", "gorsel": "Özgün tasarım" },\n  "youtube": { "baslik": "...", "aciklama": "...", "hashtagler": ["..."], "etiketler": ["..."] }\n}`;
+  try { await navigator.clipboard.writeText(prompt); alert('✓ AI prompt kopyalandı.'); } catch { alert('Kopyalanamadı.'); }
 }
 
-
-/* ═════════════════════════════════════════════════════════════════
-   BÖLÜM J10: BAŞLATICI
-   ═════════════════════════════════════════════════════════════════ */
+/* BÖLÜM J10: BAŞLATICI */
 document.addEventListener('DOMContentLoaded', () => {
   bindUI();
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').catch(console.warn);
-  }
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(console.warn);
 });
-
 </script>
 </body>
 </html>
